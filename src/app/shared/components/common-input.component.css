@@ -1,0 +1,37 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+:host ::ng-deep .form-input.p-inputtext {
+    width: 100%;
+    border-radius: 10px;
+    padding: 0.7rem 0.875rem;
+    border: 1.5px solid #cbd5e1;
+    font-size: 0.9rem;
+    color: #1e293b;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+:host ::ng-deep .form-input.p-inputtext:hover {
+    border-color: #94a3b8;
+}
+
+:host ::ng-deep .form-input.p-inputtext:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+:host ::ng-deep .form-input.p-inputtext::placeholder {
+    color: #94a3b8;
+}
+
+:host ::ng-deep .input-error.p-inputtext {
+    border-color: #f43f5e;
+}
+
+:host ::ng-deep .input-error.p-inputtext:focus {
+    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.12);
+}

@@ -1,0 +1,118 @@
+<div class="space-y-8">
+    <!-- Welcome Section -->
+    <section>
+        <h2 class="text-3xl font-bold text-slate-900 dark:text-slate-100 border-none">Welcome Back, Admin!</h2>
+        <p class="text-slate-500 dark:text-slate-400 mt-1">Here is what's happening with your HR system today.</p>
+    </section>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Employees</p>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">124</h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                    <i class="pi pi-users text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                <i class="pi pi-arrow-up mr-1 text-[10px]"></i>
+                12% from last month
+            </div>
+        </p-card>
+
+        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Present Today</p>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">118</h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                    <i class="pi pi-check-circle text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium">
+                95.1% Attendance Rate
+            </div>
+        </p-card>
+
+        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Leave Requests</p>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">12</h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                    <i class="pi pi-calendar-minus text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-amber-600 dark:text-amber-400 font-medium">
+                3 pending approval
+            </div>
+        </p-card>
+
+        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Monthly Payroll</p>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">$45,200</h3>
+                </div>
+                <div
+                    class="w-12 h-12 rounded-2xl bg-violet-50 dark:bg-violet-950/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
+                    <i class="pi pi-money-bill text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Due in 8 days
+            </div>
+        </p-card>
+    </div>
+
+    <!-- Activity Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <p-card styleClass="lg:col-span-2 !shadow-sm !border-slate-200 dark:!border-slate-800"
+            header="Employee Attendance Overview">
+            <div
+                class="h-64 flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                <p class="text-slate-400 dark:text-slate-500">Chart Visualization Placeholder</p>
+            </div>
+        </p-card>
+
+        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800" header="Upcoming Events">
+            <div class="space-y-6">
+                <div class="flex gap-4">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex flex-col items-center justify-center flex-shrink-0">
+                        <span class="text-xs font-bold text-slate-500 dark:text-slate-400">FEB</span>
+                        <span class="text-lg font-bold text-slate-900 dark:text-slate-100">24</span>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100">Company Townhall</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">10:00 AM - Online Meeting</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 flex flex-col items-center justify-center flex-shrink-0 text-indigo-600 dark:text-indigo-400">
+                        <span class="text-xs font-bold">MAR</span>
+                        <span class="text-lg font-bold">01</span>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100">Payroll Processing</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Full Day - Finance Dept</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <p-button label="View All Events" [text]="true"
+                    styleClass="!p-0 !text-indigo-600 dark:!text-indigo-400 text-sm font-bold"></p-button>
+            </div>
+        </p-card>
+    </div>
+</div>

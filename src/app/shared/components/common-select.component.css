@@ -1,0 +1,30 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+:host ::ng-deep .form-select {
+    width: 100%;
+    border-radius: 10px;
+    border: 1.5px solid #cbd5e1;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+:host ::ng-deep .form-select:hover {
+    border-color: #94a3b8;
+}
+
+:host ::ng-deep .form-select.p-focus,
+:host ::ng-deep .form-select:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+:host ::ng-deep .select-error .form-select {
+    border-color: #f43f5e;
+}

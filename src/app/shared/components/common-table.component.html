@@ -1,0 +1,63 @@
+<p-table [value]="data()" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'" [styleClass]="'p-datatable-sm'"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+
+    <ng-template pTemplate="header">
+        <tr class="!bg-slate-50 dark:!bg-slate-800/50">
+            @for (col of columns(); track col.field) {
+            <th [pSortableColumn]="col.field"
+                class="!py-4 !px-6 !text-slate-600 dark:!text-slate-400 !font-semibold !border-none">
+                <div class="flex items-center gap-2">
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field" class="!text-[10px]"></p-sortIcon>
+                </div>
+            </th>
+            }
+            <th *ngIf="hasActions()"
+                class="!py-4 !px-6 !text-slate-600 dark:!text-slate-400 !font-semibold !border-none">Actions</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData>
+        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+            @for (col of columns(); track col.field) {
+            <td
+                class="!py-4 !px-6 !text-slate-600 dark:!text-slate-400 !border-b !border-slate-100 dark:!border-slate-800 !bg-transparent">
+                @if (col.type === 'status') {
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                    [ngClass]="getStatusClass(resolveFieldValue(rowData, col.field))">
+                    {{ getStatusLabel(resolveFieldValue(rowData, col.field)) }}
+                </span>
+                } @else if (col.type === 'date') {
+                {{ resolveFieldValue(rowData, col.field) | date }}
+                } @else if (col.type === 'time') {
+                {{ resolveFieldValue(rowData, col.field) | date: 'shortTime' }}
+                } @else if (col.type === 'duration') {
+                {{ formatDuration(resolveFieldValue(rowData, col.field)) }}
+                } @else {
+                {{ resolveFieldValue(rowData, col.field) }}
+                }
+            </td>
+            }
+            <td *ngIf="hasActions()"
+                class="!py-4 !px-6 !border-b !border-slate-100 dark:!border-slate-800 !bg-transparent">
+                <div class="flex gap-1">
+                    <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" size="small" severity="secondary"
+                        styleClass="!text-slate-400 dark:!text-slate-500" (click)="edit.emit(rowData)"></p-button>
+                    <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"
+                        (click)="delete.emit(rowData)"></p-button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="columns().length + (hasActions() ? 1 : 0)" class="text-center p-12 text-slate-400">
+                <div class="flex flex-col items-center gap-3">
+                    <i class="pi pi-inbox text-4xl opacity-20"></i>
+                    <p>No records found.</p>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

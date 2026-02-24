@@ -1,0 +1,26 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center px-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 border-none">Employees</h1>
+            <p class="text-slate-500">Manage your company workforce</p>
+        </div>
+        <app-button label="Onboard Employee" icon="pi pi-user-plus" variant="primary"
+            (onClick)="openAddDialog()"></app-button>
+    </div>
+
+    <p-card styleClass="!shadow-sm !border-slate-200">
+        <app-common-table [data]="store.employees()" [columns]="columns" [hasActions]="true" (edit)="onEdit($event)"
+            (delete)="onDelete($event)">
+        </app-common-table>
+    </p-card>
+</div>
+
+<!-- Onboard / Edit Employee Dialog -->
+<p-dialog [header]="dialogTitle" [(visible)]="showDialog" [modal]="true" [draggable]="false" [resizable]="false"
+    [style]="{ width: '680px' }" [breakpoints]="{ '768px': '95vw' }" styleClass="!rounded-2xl">
+
+    <app-employee-form [employeeData]="editingEmployee"
+        [submitLabel]="editingEmployee ? 'Update Employee' : 'Onboard Employee'" (save)="onSave($event)"
+        (cancel)="onCancelDialog()">
+    </app-employee-form>
+</p-dialog>

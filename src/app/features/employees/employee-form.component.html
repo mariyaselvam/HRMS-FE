@@ -1,0 +1,27 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 p-2 pt-4">
+    <app-common-input label="Email" type="email" formControlName="email" [error]="getErrorMessage('email')">
+    </app-common-input>
+
+    <app-common-input label="Password" type="password" formControlName="password" [error]="getErrorMessage('password')">
+    </app-common-input>
+
+    <app-common-input label="Employee Code" formControlName="employeeCode" [error]="getErrorMessage('employeeCode')">
+    </app-common-input>
+
+    <app-common-select label="Department" [options]="departmentStore.departments()" optionLabel="name" optionValue="id"
+        formControlName="departmentId" placeholder="Select Department" [error]="getErrorMessage('departmentId')">
+    </app-common-select>
+
+    <app-common-datepicker label="Date of Joining" formControlName="dateOfJoining" placeholder="Select joining date"
+        [error]="getErrorMessage('dateOfJoining')">
+    </app-common-datepicker>
+
+    <app-common-select label="Status" [options]="statuses" formControlName="status" placeholder="Select Status"
+        [error]="getErrorMessage('status')">
+    </app-common-select>
+
+    <div class="md:col-span-2 flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+        <app-button label="Cancel" variant="secondary" (onClick)="cancel.emit()"></app-button>
+        <app-button type="submit" [label]="submitLabel()" icon="pi pi-check" variant="primary"></app-button>
+    </div>
+</form>

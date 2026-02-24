@@ -1,0 +1,67 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center px-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 border-none">Leave Approvals</h1>
+            <p class="text-slate-500">Review and manage pending leave requests from your team</p>
+        </div>
+    </div>
+
+    <p-card styleClass="!shadow-sm !border-slate-200">
+        <app-common-table [data]="store.allRequests()" [columns]="columns" [hasActions]="true"
+            (edit)="openReviewDialog($event)">
+        </app-common-table>
+    </p-card>
+</div>
+
+<!-- Review Leave Dialog -->
+<p-dialog header="Review Leave Request" [(visible)]="showDialog" [modal]="true" [draggable]="false" [resizable]="false"
+    [style]="{ width: '450px' }" styleClass="!rounded-2xl">
+
+    @if (selectedRequest) {
+    <div class="space-y-4 pt-2">
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <h4 class="font-semibold text-slate-900">
+                        {{ selectedRequest.employee?.firstName }} {{ selectedRequest.employee?.lastName }}
+                    </h4>
+                    <p class="text-xs text-slate-500">{{ selectedRequest.employee?.email }}</p>
+                </div>
+                <span class="text-xs font-semibold px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                    {{ selectedRequest.leaveType?.name }}
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+                <div>
+                    <p class="text-slate-500 text-xs">Dates</p>
+                    <p class="font-medium text-slate-700">
+                        {{ selectedRequest.startDate | date }} - {{ selectedRequest.endDate | date }}
+                    </p>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs">Duration</p>
+                    <p class="font-medium text-slate-700">{{ selectedRequest.appliedDays }} Days</p>
+                </div>
+                <div class="col-span-2">
+                    <p class="text-slate-500 text-xs">Reason</p>
+                    <p class="text-slate-700 mt-1 italic">"{{ selectedRequest.reason }}"</p>
+                </div>
+            </div>
+        </div>
+
+        <form [formGroup]="form" class="space-y-4">
+            <app-common-input label="Approver Remarks" formControlName="remarks"
+                placeholder="Add comments for the employee (optional)">
+            </app-common-input>
+        </form>
+
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+            <app-button label="Reject" variant="ghost" (onClick)="onAction('rejected')"
+                class="text-rose-600"></app-button>
+            <app-button label="Approve Request" icon="pi pi-check" variant="primary"
+                (onClick)="onAction('approved')"></app-button>
+        </div>
+    </div>
+    }
+</p-dialog>

@@ -1,0 +1,23 @@
+export const APP_CONFIG = {
+    API_BASE_URL: 'http://localhost:3000/api/v1',
+    PAGE_SIZE: 10,
+    DATE_FORMAT: 'dd/MM/yyyy'
+};
+
+export const API_ENDPOINTS = {
+    EMPLOYEES: '/employees',
+    EMPLOYEE_ONBOARD: '/employees/onboard',
+    ATTENDANCE: '/attendance',
+    PAYROLL: '/payroll',
+    SALARY_SETUP: '/payroll/salary-setup',
+    LEAVE: '/leave',
+    DASHBOARD: '/dashboard',
+    AUTH: {
+        LOGIN: '/auth/login',
+        REGISTER: '/auth/register',
+        LOGOUT: '/auth/logout',
+        PROFILE: '/auth/profile'
+    },
+    ORG: '/org',
+    DEPARTMENTS: '/org/departments'
+};
