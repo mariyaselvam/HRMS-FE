@@ -8,6 +8,7 @@ import { DialogModule } from 'primeng/dialog';
 import { EmployeeFormComponent, OnboardPayload } from './employee-form.component';
 import { Employee } from '../../core/models/employee.model';
 import { NotificationService } from '../../core/services/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-employee-list',
@@ -18,6 +19,7 @@ import { NotificationService } from '../../core/services/notification.service';
 export class EmployeeListComponent implements OnInit {
     protected store = inject(EmployeeStore);
     private notify = inject(NotificationService);
+    private router = inject(Router);
 
     showDialog = false;
     editingEmployee: Employee | null = null;
@@ -28,6 +30,7 @@ export class EmployeeListComponent implements OnInit {
         { field: 'department', header: 'Department' },
         { field: 'team', header: 'Team' },
         { field: 'dateOfJoining', header: 'Joining Date', type: 'date' },
+        { field: 'profileCompletion', header: 'Progress', type: 'progress' },
         { field: 'employmentStatus', header: 'Status', type: 'status' }
     ];
 
@@ -40,13 +43,18 @@ export class EmployeeListComponent implements OnInit {
     }
 
     openAddDialog(): void {
-        this.editingEmployee = null;
-        this.showDialog = true;
+        this.router.navigate(['/employees/onboard']);
     }
 
     onEdit(employee: Employee): void {
-        this.editingEmployee = employee;
-        this.showDialog = true;
+        if (employee.profileCompletion < 100) {
+            // Resume onboarding
+            this.router.navigate(['/employees/onboard', employee.id]);
+        } else {
+            // Regular edit for active employees
+            this.editingEmployee = employee;
+            this.showDialog = true;
+        }
     }
 
     onSave(payload: OnboardPayload): void {

@@ -9,6 +9,8 @@ export interface EmployeeApiResponse {
     managerId: string | null;
     dateOfJoining: string;
     employmentStatus: string;
+    onboardingStep: number;
+    profileCompletion: number;
     dateOfLeaving: string | null;
     createdAt: string;
     updatedAt: string;
@@ -22,8 +24,12 @@ export interface EmployeeApiResponse {
         name: string;
     } | null;
     manager: {
-        user: { email: string };
+        employeeCode: string;
     } | null;
+    personalDetails?: any;
+    jobDetails?: any;
+    bankDetails?: any;
+    statutoryDetails?: any;
 }
 
 /** Flattened employee used throughout the frontend UI */
@@ -37,6 +43,14 @@ export interface Employee {
     dateOfJoining: string;
     dateOfLeaving: string | null;
     managerId: string | null;
+    onboardingStep: number;
+    profileCompletion: number;
+    // Raw details for forms
+    personalDetails?: any;
+    jobDetails?: any;
+    bankDetails?: any;
+    statutoryDetails?: any;
+    departmentId?: string;
 }
 
 /** Generic API wrapper matching backend response shape */
@@ -64,5 +78,12 @@ export function mapEmployeeResponse(raw: EmployeeApiResponse): Employee {
         dateOfJoining: raw.dateOfJoining,
         dateOfLeaving: raw.dateOfLeaving,
         managerId: raw.managerId,
+        onboardingStep: raw.onboardingStep,
+        profileCompletion: raw.profileCompletion,
+        personalDetails: raw.personalDetails,
+        jobDetails: raw.jobDetails,
+        bankDetails: raw.bankDetails,
+        statutoryDetails: raw.statutoryDetails,
+        departmentId: raw.departmentId
     };
 }
