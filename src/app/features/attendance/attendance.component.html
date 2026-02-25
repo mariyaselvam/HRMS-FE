@@ -8,7 +8,8 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Check In/Out Widget -->
-        <p-card styleClass="!shadow-indigo-100 !shadow-lg !border-none !overflow-hidden">
+        <p-card
+            styleClass="!shadow-indigo-100/50 !shadow-lg !border-none !overflow-hidden dark:!shadow-none dark:!border dark:!border-slate-800">
             <div class="p-2">
                 <div class="text-center space-y-4">
                     <!-- Live Clock -->
@@ -119,7 +120,7 @@
     </div>
 
     <!-- Attendance History Table -->
-    <p-card styleClass="!shadow-sm !border-slate-200" header="Attendance History">
+    <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800" header="Attendance History">
         <app-common-table [data]="store.logs()" [columns]="columns">
         </app-common-table>
     </p-card>

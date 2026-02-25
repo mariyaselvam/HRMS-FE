@@ -3,24 +3,26 @@
 
 @if (authService.isLoggedIn()) {
 <!-- Authenticated Layout -->
-<div class="min-h-screen bg-slate-50 flex">
+<div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300">
   <!-- Sidebar Component -->
   <app-sidebar (logout)="onLogout()"></app-sidebar>
 
   <!-- Main Content -->
   <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
     <!-- Header -->
-    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8">
+    <header
+      class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 transition-colors duration-300">
       <div class="flex items-center gap-4">
-        <button class="md:hidden p-2 text-slate-500">
+        <button class="md:hidden p-2 text-slate-500 dark:text-slate-400">
           <i class="pi pi-bars text-xl"></i>
         </button>
         <div class="relative hidden sm:block">
-          <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"></i>
           <input pInputText type="text" placeholder="Search..."
-            class="pl-10 w-64 bg-slate-50 border-none !ring-0 rounded-lg h-10" />
+            class="pl-10 w-64 bg-slate-50 dark:bg-slate-800 border-none !ring-0 rounded-lg h-10 text-slate-900 dark:text-slate-100" />
         </div>
       </div>
+
 
       <div class="flex items-center gap-4">
         <span class="text-sm font-medium text-slate-600 dark:text-slate-400 hidden sm:inline">

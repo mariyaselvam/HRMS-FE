@@ -20,7 +20,16 @@
         [error]="getErrorMessage('status')">
     </app-common-select>
 
-    <div class="md:col-span-2 flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+    <app-common-select label="Role" [options]="roles" formControlName="role" placeholder="Select Role"
+        [error]="getErrorMessage('role')">
+    </app-common-select>
+
+    <app-common-select label="Reports To" [options]="employeeStore.employees()" optionLabel="email" optionValue="id"
+        formControlName="managerId" placeholder="Select Manager" [error]="getErrorMessage('managerId')">
+    </app-common-select>
+
+
+    <div class="md:col-span-2 flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
         <app-button label="Cancel" variant="secondary" (onClick)="cancel.emit()"></app-button>
         <app-button type="submit" [label]="submitLabel()" icon="pi pi-check" variant="primary"></app-button>
     </div>

@@ -14,9 +14,12 @@ export interface OnboardPayload {
     password: string;
     employeeCode: string;
     departmentId: string;
+    role: string;
+    managerId?: string | null;
     dateOfJoining: string;
     status: string;
 }
+
 
 @Component({
     selector: 'app-employee-form',
@@ -42,6 +45,8 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
         password: ['', [Validators.required, Validators.minLength(8)]],
         employeeCode: ['', [Validators.required]],
         departmentId: [null, [Validators.required]],
+        role: ['employee', [Validators.required]],
+        managerId: [null],
         dateOfJoining: ['', [Validators.required]],
         status: ['probation', [Validators.required]]
     });
@@ -52,10 +57,18 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
         { label: 'Notice', value: 'notice' }
     ];
 
+    roles = [
+        { label: 'Employee', value: 'employee' },
+        { label: 'Manager', value: 'manager' },
+        { label: 'HR', value: 'hr' }
+    ];
+
     ngOnInit() {
         this.departmentStore.loadDepartments();
+        this.employeeStore.loadEmployees();
         this.resetForm();
     }
+
 
     ngOnChanges() {
         this.resetForm();
@@ -68,7 +81,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
             this.form.get('password')?.clearValidators();
             this.form.get('password')?.updateValueAndValidity();
         } else {
-            this.form.reset({ status: 'probation' });
+            this.form.reset({ status: 'probation', role: 'employee' });
             this.form.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
             this.form.get('password')?.updateValueAndValidity();
         }

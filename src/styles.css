@@ -70,12 +70,61 @@
 
     .dark .p-datatable .p-datatable-header,
     .dark .p-datatable .p-datatable-thead>tr>th,
-    .dark .p-datatable .p-datatable-tbody>tr {
+    .dark .p-datatable .p-datatable-tbody>tr,
+    .dark .p-paginator {
         @apply !bg-slate-900 !text-slate-100 !border-slate-800;
+    }
+
+    .dark .p-paginator .p-paginator-page,
+    .dark .p-paginator .p-paginator-first,
+    .dark .p-paginator .p-paginator-prev,
+    .dark .p-paginator .p-paginator-next,
+    .dark .p-paginator .p-paginator-last {
+        @apply !text-slate-400 hover:bg-slate-800;
+    }
+
+    .dark .p-paginator .p-paginator-page.p-highlight {
+        @apply !bg-indigo-950/40 !text-indigo-400;
+    }
+
+    .dark .p-paginator .p-current-page-report {
+        @apply !text-slate-500 !font-medium;
     }
 
     .dark .p-datatable .p-datatable-tbody>tr:hover {
         @apply !bg-slate-800/50;
+    }
+
+    /* Dialog & Modal Overrides */
+    .dark .p-dialog {
+        @apply !bg-slate-900 !text-slate-100 !border !border-slate-800 !rounded-2xl !shadow-2xl;
+    }
+
+    .dark .p-dialog .p-dialog-header,
+    .dark .p-dialog .p-dialog-content,
+    .dark .p-dialog .p-dialog-footer {
+        @apply !bg-slate-900 !text-slate-100 !border-slate-800;
+    }
+
+    .dark .p-dialog .p-dialog-header .p-dialog-title {
+        @apply font-bold text-xl;
+    }
+
+    .dark .p-dialog .p-dialog-header .p-dialog-header-icon {
+        @apply !text-slate-400 hover:bg-slate-800 !rounded-lg transition-colors;
+    }
+
+    .dark .p-dialog-mask {
+        @apply bg-slate-950/60 backdrop-blur-sm;
+    }
+
+    /* Confirm Dialog specific */
+    .dark .p-confirm-dialog .p-dialog-content {
+        @apply !py-6 !px-8;
+    }
+
+    .dark .p-confirm-dialog-icon {
+        @apply !text-amber-500;
     }
 
     /* Common layout elements */

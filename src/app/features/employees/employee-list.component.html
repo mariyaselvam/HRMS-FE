@@ -1,14 +1,15 @@
 <div class="space-y-6">
     <div class="flex justify-between items-center px-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-900 border-none">Employees</h1>
-            <p class="text-slate-500">Manage your company workforce</p>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100 border-none">Employees</h1>
+            <p class="text-slate-500 dark:text-slate-400">Manage your company workforce</p>
         </div>
         <app-button label="Onboard Employee" icon="pi pi-user-plus" variant="primary"
             (onClick)="openAddDialog()"></app-button>
     </div>
 
-    <p-card styleClass="!shadow-sm !border-slate-200">
+    <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+
         <app-common-table [data]="store.employees()" [columns]="columns" [hasActions]="true" (edit)="onEdit($event)"
             (delete)="onDelete($event)">
         </app-common-table>

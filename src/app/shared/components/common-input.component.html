@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-1.5 w-full">
-    <label [for]="id()" class="text-sm font-semibold text-slate-700">{{ label() }}</label>
+    <label [for]="id()" class="text-sm font-semibold text-slate-700 dark:text-slate-300">{{ label() }}</label>
     <input pInputText [id]="id()" [type]="type()" class="form-input" [class.input-error]="error()"
         [disabled]="disabled()" [(ngModel)]="value" (ngModelChange)="onValueChange($event)" (blur)="onBlur()" />
     @if (error()) {

@@ -1,19 +1,39 @@
-:host ::ng-deep {
+﻿:host ::ng-deep {
     .p-datatable {
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #e2e8f0;
+        @apply border-none bg-transparent !important;
+    }
+
+    /* Paginator Fixes for Dark Mode */
+    .p-paginator {
+        @apply !bg-transparent !border-t !border-slate-100 dark:!border-slate-800 !py-4 transition-colors;
+    }
+
+    .p-paginator .p-paginator-pages .p-paginator-page,
+    .p-paginator .p-paginator-first,
+    .p-paginator .p-paginator-prev,
+    .p-paginator .p-paginator-next,
+    .p-paginator .p-paginator-last {
+        @apply !bg-transparent !text-slate-500 !rounded-lg hover:!bg-slate-100 dark:hover:!bg-slate-800 transition-colors;
+    }
+
+    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+        @apply !bg-indigo-50 !text-indigo-600 dark:!bg-indigo-950/30 dark:!text-indigo-400 !font-bold;
+    }
+
+    .p-paginator .p-current-page-report {
+        @apply !text-slate-400 dark:!text-slate-500 !text-xs !font-medium;
+    }
+
+    /* Remove default PrimeNG internal borders that clash */
+    .p-datatable .p-datatable-tbody>tr {
+        @apply transition-colors;
     }
 
     .p-datatable .p-datatable-thead>tr>th {
-        background: #f8fafc;
-        color: #475569;
-        font-weight: 600;
-        padding: 1rem;
+        @apply !bg-slate-50/50 dark:!bg-slate-800/30 !py-3.5 !px-6 !border-b !border-slate-100 dark:!border-slate-800 !text-slate-500 dark:!text-slate-400 !text-xs !font-bold !uppercase !tracking-wider;
     }
 
     .p-datatable .p-datatable-tbody>tr>td {
-        padding: 1rem;
-        color: #1e293b;
+        @apply !py-4 !px-6 !border-b !border-slate-100 dark:!border-slate-800 !text-sm text-slate-600 dark:text-slate-300;
     }
 }

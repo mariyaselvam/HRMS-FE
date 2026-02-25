@@ -4,34 +4,33 @@
 }
 
 :host ::ng-deep .form-input.p-inputtext {
-    width: 100%;
-    border-radius: 10px;
-    padding: 0.7rem 0.875rem;
-    border: 1.5px solid #cbd5e1;
-    font-size: 0.9rem;
-    color: #1e293b;
-    background: #fff;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
+    @apply w-full rounded-xl py-2.5 px-3.5 border-[1.5px] border-slate-200 bg-white text-slate-800 text-sm transition-all outline-none;
+}
+
+.dark :host ::ng-deep .form-input.p-inputtext {
+    @apply border-slate-700 bg-slate-900 text-slate-100;
 }
 
 :host ::ng-deep .form-input.p-inputtext:hover {
-    border-color: #94a3b8;
+    @apply border-slate-400;
+}
+
+.dark :host ::ng-deep .form-input.p-inputtext:hover {
+    @apply border-slate-600;
 }
 
 :host ::ng-deep .form-input.p-inputtext:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    @apply border-indigo-500 ring-4 ring-indigo-500/10;
 }
 
 :host ::ng-deep .form-input.p-inputtext::placeholder {
-    color: #94a3b8;
+    @apply text-slate-400;
 }
 
 :host ::ng-deep .input-error.p-inputtext {
-    border-color: #f43f5e;
+    @apply border-rose-500;
 }
 
 :host ::ng-deep .input-error.p-inputtext:focus {
-    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.12);
+    @apply ring-rose-500/10;
 }

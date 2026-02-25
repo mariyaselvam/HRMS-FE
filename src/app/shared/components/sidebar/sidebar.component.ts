@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SIDEBAR_NAV_ITEMS, SIDEBAR_APP_TITLE, SidebarNavItem } from '../../../core/constants/sidebar.constants';
@@ -13,9 +13,15 @@ import { AuthService } from '../../../core/services/auth.service';
     styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-    readonly navItems: SidebarNavItem[] = SIDEBAR_NAV_ITEMS;
-    readonly appTitle: string = SIDEBAR_APP_TITLE;
     authService = inject(AuthService);
+    readonly appTitle: string = SIDEBAR_APP_TITLE;
+
+    readonly navItems = computed(() => {
+        const userRole = this.authService.userRole().toLowerCase();
+        return SIDEBAR_NAV_ITEMS.filter(item =>
+            !item.roles || item.roles.includes(userRole)
+        );
+    });
 
     logout = output<void>();
 
