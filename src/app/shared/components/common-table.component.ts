@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 export interface Column {
     field: string;
     header: string;
-    type?: 'text' | 'date' | 'time' | 'duration' | 'status' | 'action';
+    type?: 'text' | 'date' | 'time' | 'duration' | 'status' | 'progress' | 'action';
 }
 
 @Component({

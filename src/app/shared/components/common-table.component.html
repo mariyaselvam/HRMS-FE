@@ -27,6 +27,13 @@
                     [ngClass]="getStatusClass(resolveFieldValue(rowData, col.field))">
                     {{ getStatusLabel(resolveFieldValue(rowData, col.field)) }}
                 </span>
+                } @else if (col.type === 'progress') {
+                <div class="flex items-center gap-2">
+                    <div class="w-24 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 rounded-full" [style.width.%]="resolveFieldValue(rowData, col.field)"></div>
+                    </div>
+                    <span class="text-xs font-medium text-slate-500">{{ resolveFieldValue(rowData, col.field) }}%</span>
+                </div>
                 } @else if (col.type === 'date') {
                 {{ resolveFieldValue(rowData, col.field) | date }}
                 } @else if (col.type === 'time') {

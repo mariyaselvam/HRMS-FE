@@ -59,19 +59,64 @@ export class EmployeeStore {
             });
     }
 
-    onboardEmployee(payload: any) {
+    getEmployee(id: string) {
         this.setLoading(true);
-        this.http.post<ApiResponse<EmployeeApiResponse>>(API_ENDPOINTS.EMPLOYEE_ONBOARD, payload)
+        return this.http.get<ApiResponse<EmployeeApiResponse>>(`${API_ENDPOINTS.EMPLOYEES}/${id}`)
             .pipe(
                 map(res => mapEmployeeResponse(res.data)),
                 finalize(() => this.setLoading(false))
-            )
+            );
+    }
+
+    onboardEmployee(payload: any) {
+        this.setLoading(true);
+        return this.http.post<ApiResponse<EmployeeApiResponse>>(API_ENDPOINTS.EMPLOYEE_ONBOARD, payload)
+            .pipe(
+                map(res => mapEmployeeResponse(res.data)),
+                finalize(() => this.setLoading(false))
+            );
+    }
+
+    savePersonalDetails(id: string, payload: any) {
+        this.setLoading(true);
+        this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_PERSONAL(id), payload)
+            .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
-                next: (newEmp) => {
-                    this.state.update(s => ({ ...s, employees: [...s.employees, newEmp] }));
-                    this.notify.success('Employee Onboarded', `Successfully created ${newEmp.email}`);
+                next: () => this.notify.success('Personal Details Saved', 'Information updated successfully.'),
+                error: (err) => this.handleError('Failed to save personal details', err)
+            });
+    }
+
+    saveJobDetails(id: string, payload: any) {
+        this.setLoading(true);
+        this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_JOB(id), payload)
+            .pipe(finalize(() => this.setLoading(false)))
+            .subscribe({
+                next: () => this.notify.success('Job Details Saved', 'Information updated successfully.'),
+                error: (err) => this.handleError('Failed to save job details', err)
+            });
+    }
+
+    saveStatutoryDetails(id: string, payload: any) {
+        this.setLoading(true);
+        this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_STATUTORY(id), payload)
+            .pipe(finalize(() => this.setLoading(false)))
+            .subscribe({
+                next: () => this.notify.success('Statutory Details Saved', 'Information updated successfully.'),
+                error: (err) => this.handleError('Failed to save statutory details', err)
+            });
+    }
+
+    finalizeOnboarding(id: string) {
+        this.setLoading(true);
+        this.http.post<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_FINALIZE(id), {})
+            .pipe(finalize(() => this.setLoading(false)))
+            .subscribe({
+                next: () => {
+                    this.notify.success('Onboarding Finalized', 'Employee is now active.');
+                    this.loadEmployees();
                 },
-                error: (err) => this.handleError('Onboarding Failed', err)
+                error: (err) => this.handleError('Finalization Failed', err)
             });
     }
 

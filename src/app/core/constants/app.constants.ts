@@ -7,6 +7,10 @@ export const APP_CONFIG = {
 export const API_ENDPOINTS = {
     EMPLOYEES: '/employees',
     EMPLOYEE_ONBOARD: '/employees/onboard',
+    EMPLOYEE_PERSONAL: (id: string) => `/employees/${id}/personal`,
+    EMPLOYEE_JOB: (id: string) => `/employees/${id}/job`,
+    EMPLOYEE_STATUTORY: (id: string) => `/employees/${id}/statutory`,
+    EMPLOYEE_FINALIZE: (id: string) => `/employees/${id}/finalize`,
     ATTENDANCE: '/attendance',
     PAYROLL: '/payroll',
     SALARY_SETUP: '/payroll/salary-setup',
