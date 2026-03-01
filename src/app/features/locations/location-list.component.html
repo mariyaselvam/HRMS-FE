@@ -1,0 +1,41 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center px-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 border-none">Branches</h1>
+            <p class="text-slate-500">Manage office locations and branches</p>
+        </div>
+        <app-button label="Add Branch" icon="pi pi-plus" variant="primary" (onClick)="openAddDialog()"></app-button>
+    </div>
+
+    <p-card styleClass="!shadow-sm !border-slate-200">
+        <app-common-table [data]="store.locations()" [columns]="columns" [hasActions]="true" (edit)="onEdit($event)"
+            (delete)="onDelete($event)">
+        </app-common-table>
+    </p-card>
+</div>
+
+<!-- Add/Edit Branch Dialog -->
+<p-dialog [header]="dialogTitle" [(visible)]="showDialog" [modal]="true" [draggable]="false" [resizable]="false"
+    [style]="{ width: '450px' }" styleClass="!rounded-2xl">
+
+    <form [formGroup]="form" (ngSubmit)="onSave()" class="space-y-4 pt-4">
+        <app-common-input label="Branch Name" formControlName="name" placeholder="e.g. Bangalore HQ"
+            [error]="getErrorMessage('name')">
+        </app-common-input>
+
+        <app-common-input label="Address" formControlName="address" placeholder="Physical address of the branch">
+        </app-common-input>
+
+        <div class="grid grid-cols-2 gap-4">
+            <app-common-input label="Latitude" formControlName="latitude" type="number" placeholder="0.0000">
+            </app-common-input>
+            <app-common-input label="Longitude" formControlName="longitude" type="number" placeholder="0.0000">
+            </app-common-input>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+            <app-button label="Cancel" variant="secondary" (onClick)="showDialog = false"></app-button>
+            <app-button type="submit" label="Save Branch" icon="pi pi-check" variant="primary"></app-button>
+        </div>
+    </form>
+</p-dialog>

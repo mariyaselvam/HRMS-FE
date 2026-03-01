@@ -10,6 +10,7 @@ import { DepartmentStore } from '../../store/department.store';
 import { CommonInputComponent } from '../../shared/components/common-input.component';
 import { CommonSelectComponent } from '../../shared/components/common-select.component';
 import { CommonDatepickerComponent } from '../../shared/components/common-datepicker.component';
+import { LocationStore } from '../../store/location.store';
 
 @Component({
   selector: 'app-onboarding',
@@ -50,6 +51,7 @@ import { CommonDatepickerComponent } from '../../shared/components/common-datepi
                   <app-common-input formControlName="password" label="Initial Password" type="password" [error]="getErrorMessage(step1Form, 'password')"></app-common-input>
                   <app-common-input formControlName="employeeCode" label="Employee Code" [error]="getErrorMessage(step1Form, 'employeeCode')"></app-common-input>
                   <app-common-select formControlName="departmentId" label="Department" [options]="deptOptions()" [error]="getErrorMessage(step1Form, 'departmentId')"></app-common-select>
+                  <app-common-select formControlName="workLocationId" label="Work Location" [options]="locationOptions()" [error]="getErrorMessage(step1Form, 'workLocationId')"></app-common-select>
                   <app-common-datepicker formControlName="dateOfJoining" label="Joining Date" [error]="getErrorMessage(step1Form, 'dateOfJoining')"></app-common-datepicker>
                 </form>
                 <div class="flex justify-end mt-8">
@@ -142,6 +144,7 @@ export class OnboardingComponent implements OnInit {
   private fb = inject(FormBuilder);
   protected store = inject(EmployeeStore);
   protected deptStore = inject(DepartmentStore);
+  protected locationStore = inject(LocationStore);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -160,6 +163,7 @@ export class OnboardingComponent implements OnInit {
     password: ['', [Validators.required, Validators.minLength(8)]],
     employeeCode: ['', [Validators.required]],
     departmentId: [null, [Validators.required]],
+    workLocationId: [null, [Validators.required]],
     dateOfJoining: [new Date(), [Validators.required]]
   });
 
@@ -195,6 +199,10 @@ export class OnboardingComponent implements OnInit {
     this.deptStore.departments().map(d => ({ label: d.name, value: d.id }))
   );
 
+  locationOptions = computed(() =>
+    this.locationStore.locations().map(l => ({ label: l.name, value: l.id }))
+  );
+
   genderOptions = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
@@ -222,6 +230,7 @@ export class OnboardingComponent implements OnInit {
 
   ngOnInit() {
     this.deptStore.loadDepartments();
+    this.locationStore.loadLocations();
 
     // Check if resuming from ID
     this.route.params.subscribe(params => {
@@ -240,6 +249,7 @@ export class OnboardingComponent implements OnInit {
         email: emp.email,
         employeeCode: emp.employeeCode,
         departmentId: emp.departmentId,
+        workLocationId: emp.workLocationId,
         dateOfJoining: emp.dateOfJoining ? new Date(emp.dateOfJoining) : new Date()
       });
 

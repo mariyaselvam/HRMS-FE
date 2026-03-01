@@ -28,6 +28,7 @@ export class EmployeeListComponent implements OnInit {
         { field: 'employeeCode', header: 'Employee Code' },
         { field: 'email', header: 'Email' },
         { field: 'department', header: 'Department' },
+        { field: 'workLocation', header: 'Branch' },
         { field: 'team', header: 'Team' },
         { field: 'dateOfJoining', header: 'Joining Date', type: 'date' },
         { field: 'profileCompletion', header: 'Progress', type: 'progress' },

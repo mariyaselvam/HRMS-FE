@@ -38,6 +38,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'branches',
+        loadComponent: () => import('./features/locations/location-list.component').then(m => m.LocationListComponent),
+        canActivate: [authGuard]
+    },
+    {
         path: 'leave/types',
         loadComponent: () => import('./features/leave/leave-types.component').then(m => m.LeaveTypesComponent),
         canActivate: [authGuard]

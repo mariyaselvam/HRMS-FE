@@ -12,6 +12,10 @@
         formControlName="departmentId" placeholder="Select Department" [error]="getErrorMessage('departmentId')">
     </app-common-select>
 
+    <app-common-select label="Branch" [options]="locationStore.locations()" optionLabel="name" optionValue="id"
+        formControlName="workLocationId" placeholder="Select Branch" [error]="getErrorMessage('workLocationId')">
+    </app-common-select>
+
     <app-common-datepicker label="Date of Joining" formControlName="dateOfJoining" placeholder="Select joining date"
         [error]="getErrorMessage('dateOfJoining')">
     </app-common-datepicker>

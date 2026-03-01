@@ -5,6 +5,7 @@ export interface EmployeeApiResponse {
     userId: string;
     employeeCode: string;
     departmentId: string;
+    workLocationId: string | null;
     teamId: string | null;
     managerId: string | null;
     dateOfJoining: string;
@@ -20,6 +21,9 @@ export interface EmployeeApiResponse {
     department: {
         name: string;
     };
+    workLocation: {
+        name: string;
+    } | null;
     team: {
         name: string;
     } | null;
@@ -38,6 +42,7 @@ export interface Employee {
     employeeCode: string;
     email: string;
     department: string;
+    workLocation: string;
     team: string;
     employmentStatus: string;
     dateOfJoining: string;
@@ -51,6 +56,7 @@ export interface Employee {
     bankDetails?: any;
     statutoryDetails?: any;
     departmentId?: string;
+    workLocationId?: string;
 }
 
 /** Generic API wrapper matching backend response shape */
@@ -73,6 +79,7 @@ export function mapEmployeeResponse(raw: EmployeeApiResponse): Employee {
         employeeCode: raw.employeeCode,
         email: raw.user?.email ?? '',
         department: raw.department?.name ?? '',
+        workLocation: raw.workLocation?.name ?? '-',
         team: raw.team?.name ?? '-',
         employmentStatus: raw.employmentStatus,
         dateOfJoining: raw.dateOfJoining,
@@ -84,6 +91,7 @@ export function mapEmployeeResponse(raw: EmployeeApiResponse): Employee {
         jobDetails: raw.jobDetails,
         bankDetails: raw.bankDetails,
         statutoryDetails: raw.statutoryDetails,
-        departmentId: raw.departmentId
+        departmentId: raw.departmentId,
+        workLocationId: raw.workLocationId ?? undefined
     };
 }

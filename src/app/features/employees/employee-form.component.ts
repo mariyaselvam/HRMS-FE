@@ -8,12 +8,14 @@ import { CommonButtonComponent } from '../../shared/components/common-button.com
 import { Employee } from '../../core/models/employee.model';
 import { EmployeeStore } from '../../store/employee.store';
 import { DepartmentStore } from '../../store/department.store';
+import { LocationStore } from '../../store/location.store';
 
 export interface OnboardPayload {
     email: string;
     password: string;
     employeeCode: string;
     departmentId: string;
+    workLocationId: string;
     role: string;
     managerId?: string | null;
     dateOfJoining: string;
@@ -31,6 +33,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
     private fb = inject(FormBuilder);
     protected employeeStore = inject(EmployeeStore);
     protected departmentStore = inject(DepartmentStore);
+    protected locationStore = inject(LocationStore);
 
     employeeData = input<Employee | null>(null);
     submitLabel = input<string>('Onboard Employee');
@@ -45,6 +48,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
         password: ['', [Validators.required, Validators.minLength(8)]],
         employeeCode: ['', [Validators.required]],
         departmentId: [null, [Validators.required]],
+        workLocationId: [null, [Validators.required]],
         role: ['employee', [Validators.required]],
         managerId: [null],
         dateOfJoining: ['', [Validators.required]],
@@ -65,6 +69,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.departmentStore.loadDepartments();
+        this.locationStore.loadLocations();
         this.employeeStore.loadEmployees();
         this.resetForm();
     }
