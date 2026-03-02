@@ -39,6 +39,9 @@ export class OnboardingComponent implements OnInit {
   activeStep = signal(1);
   employeeId = signal<string | null>(null);
 
+  // Document Upload State
+  uploadedFiles = signal<{ file: File, type: string, previewUrl?: string }[]>([]);
+
   onStepChange(step: number | undefined) {
     if (step !== undefined) {
       this.activeStep.set(step);
@@ -219,6 +222,54 @@ export class OnboardingComponent implements OnInit {
     }
     this.store.saveStatutoryDetails(this.employeeId()!, this.step4Form.value);
     this.activeStep.set(5);
+    if (typeof nextCallback === 'function') nextCallback();
+  }
+
+  // --- Step 5: Documents ---
+  onFileSelect(event: Event, type: string) {
+    const element = event.target as HTMLInputElement;
+    if (element.files && element.files.length > 0) {
+      const file = element.files[0];
+      // Create object URL for simple preview if image, otherwise just icon
+      const previewUrl = file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined;
+
+      this.uploadedFiles.update(files => {
+        // Remove existing of same type if present
+        const filtered = files.filter(f => f.type !== type);
+        return [...filtered, { file, type, previewUrl }];
+      });
+    }
+  }
+
+  getFileForType(type: string) {
+    return this.uploadedFiles().find(f => f.type === type);
+  }
+
+  removeFile(type: string) {
+    this.uploadedFiles.update(files => {
+      const target = files.find(f => f.type === type);
+      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
+      return files.filter(f => f.type !== type);
+    });
+  }
+
+  handleStep5(nextCallback: any) {
+    if (this.uploadedFiles().length === 0) {
+      // If we want to force files:
+      // return;
+    }
+
+    // Only upload if we actually have files
+    if (this.uploadedFiles().length > 0) {
+      const formData = new FormData();
+      this.uploadedFiles().forEach(f => {
+        formData.append('documents', f.file, f.file.name);
+        formData.append('documentTypes', f.type);
+      });
+      this.store.saveDocuments(this.employeeId()!, formData);
+    }
+
+    this.activeStep.set(6);
     if (typeof nextCallback === 'function') nextCallback();
   }
 

@@ -110,6 +110,16 @@ export class EmployeeStore {
             });
     }
 
+    saveDocuments(id: string, formData: FormData) {
+        this.setLoading(true);
+        this.http.post<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_DOCUMENTS(id), formData)
+            .pipe(finalize(() => this.setLoading(false)))
+            .subscribe({
+                next: () => this.notify.success('Documents Uploaded', 'Files have been saved securely.'),
+                error: (err) => this.handleError('Failed to upload documents', err)
+            });
+    }
+
     finalizeOnboarding(id: string) {
         this.setLoading(true);
         this.http.post<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_FINALIZE(id), {})

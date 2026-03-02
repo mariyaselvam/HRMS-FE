@@ -10,7 +10,8 @@
             <p-step [value]="2">Personal</p-step>
             <p-step [value]="3">Job</p-step>
             <p-step [value]="4">Payroll</p-step>
-            <p-step [value]="5">Finalize</p-step>
+            <p-step [value]="5">Documents</p-step>
+            <p-step [value]="6">Finalize</p-step>
         </p-step-list>
 
         <p-step-panels>
@@ -124,8 +125,127 @@
                 </ng-template>
             </p-step-panel>
 
-            <!-- Step 5: Finalize -->
+            <!-- Step 5: Documents -->
             <p-step-panel [value]="5">
+                <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
+                    <p-card class="!shadow-none !border-slate-200">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Resume Upload -->
+                            <div
+                                class="bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <ng-container *ngIf="!getFileForType('resume'); else resumePreview">
+                                    <div class="flex flex-col items-center justify-center gap-3">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 flex items-center justify-center">
+                                            <i class="pi pi-file-pdf text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-semibold text-slate-800 dark:text-slate-200">Resume
+                                                / CV</h4>
+                                            <p class="text-xs text-slate-500 mt-1">PDF, DOCX up to 5MB</p>
+                                        </div>
+                                        <label
+                                            class="mt-4 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2">
+                                            <span>Browse Files</span>
+                                            <input type="file" class="sr-only" accept=".pdf,.doc,.docx"
+                                                (change)="onFileSelect($event, 'resume')">
+                                        </label>
+                                    </div>
+                                </ng-container>
+                                <ng-template #resumePreview>
+                                    <div class="flex flex-col items-center justify-center gap-4">
+                                        <div
+                                            class="w-16 h-16 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 flex items-center justify-center border border-indigo-100 dark:border-indigo-800/50">
+                                            <i class="pi pi-file-pdf text-2xl"></i>
+                                        </div>
+                                        <div class="w-full">
+                                            <p class="text-sm font-medium text-slate-700 dark:text-slate-300 truncate px-4"
+                                                [title]="getFileForType('resume')?.file?.name">
+                                                {{ getFileForType('resume')?.file?.name }}
+                                            </p>
+                                            <p class="text-xs text-slate-500 mt-1">{{
+                                                (getFileForType('resume')?.file?.size || 0) / 1024 | number:'1.0-0' }}
+                                                KB</p>
+                                        </div>
+                                        <button type="button"
+                                            class="text-sm text-rose-500 hover:text-rose-600 font-medium"
+                                            (click)="removeFile('resume')">
+                                            Remove Document
+                                        </button>
+                                    </div>
+                                </ng-template>
+                            </div>
+
+                            <!-- ID Proof Upload -->
+                            <div
+                                class="bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <ng-container *ngIf="!getFileForType('id_proof'); else idPreview">
+                                    <div class="flex flex-col items-center justify-center gap-3">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center">
+                                            <i class="pi pi-id-card text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-semibold text-slate-800 dark:text-slate-200">ID
+                                                Proof</h4>
+                                            <p class="text-xs text-slate-500 mt-1">JPG, PNG, PDF up to 5MB</p>
+                                        </div>
+                                        <label
+                                            class="mt-4 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2">
+                                            <span>Browse Files</span>
+                                            <input type="file" class="sr-only" accept=".jpg,.jpeg,.png,.pdf"
+                                                (change)="onFileSelect($event, 'id_proof')">
+                                        </label>
+                                    </div>
+                                </ng-container>
+                                <ng-template #idPreview>
+                                    <div class="flex flex-col items-center justify-center gap-4">
+                                        <div
+                                            class="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center relative group">
+                                            <img *ngIf="getFileForType('id_proof')?.previewUrl"
+                                                [src]="getFileForType('id_proof')?.previewUrl"
+                                                class="w-full h-full object-cover">
+                                            <i *ngIf="!getFileForType('id_proof')?.previewUrl"
+                                                class="pi pi-file-pdf text-3xl text-slate-400"></i>
+                                            <div
+                                                class="absolute inset-0 bg-slate-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button class="text-white hover:text-rose-200 p-2"
+                                                    (click)="removeFile('id_proof')">
+                                                    <i class="pi pi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="w-full">
+                                            <p class="text-sm font-medium text-slate-700 dark:text-slate-300 truncate px-4"
+                                                [title]="getFileForType('id_proof')?.file?.name">
+                                                {{ getFileForType('id_proof')?.file?.name }}
+                                            </p>
+                                            <p class="text-xs text-slate-500 mt-1">{{
+                                                (getFileForType('id_proof')?.file?.size || 0) / 1024 | number:'1.0-0' }}
+                                                KB</p>
+                                        </div>
+                                        <button type="button"
+                                            class="text-sm text-rose-500 hover:text-rose-600 font-medium"
+                                            (click)="removeFile('id_proof')">
+                                            Remove Document
+                                        </button>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-8">
+                            <p-button label="Back" icon="pi pi-arrow-left" [text]="true"
+                                (onClick)="prevCallback()"></p-button>
+                            <p-button label="Upload & Continue" icon="pi pi-cloud-upload" iconPos="right"
+                                (onClick)="handleStep5(nextCallback)"></p-button>
+                        </div>
+                    </p-card>
+                </ng-template>
+            </p-step-panel>
+
+            <!-- Step 6: Finalize -->
+            <p-step-panel [value]="6">
                 <ng-template pTemplate="content" let-prevCallback="prevCallback">
                     <p-card class="!shadow-none !border-slate-200">
                         <div class="text-center py-8">
@@ -134,7 +254,7 @@
                             <p class="text-slate-500 mb-8 px-12">All mandatory details have been collected. Click below
                                 to finalize the onboarding and activate the employee profile.</p>
                             <div class="flex justify-center gap-4">
-                                <p-button label="Back to Payroll" [text]="true" (onClick)="prevCallback()"></p-button>
+                                <p-button label="Back to Documents" [text]="true" (onClick)="prevCallback()"></p-button>
                                 <p-button label="Finalize & Activate" severity="success"
                                     (onClick)="handleFinalize()"></p-button>
                             </div>
