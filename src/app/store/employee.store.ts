@@ -46,7 +46,10 @@ export class EmployeeStore {
     readonly departments = computed(() => this._departments());
 
     // Actions
-    loadEmployees() {
+    loadEmployees(force: boolean = false) {
+        if (!force && this.state().employees.length > 0) {
+            return;
+        }
         this.setLoading(true);
         this.http.get<ApiResponse<EmployeeApiResponse[]>>(API_ENDPOINTS.EMPLOYEES)
             .pipe(

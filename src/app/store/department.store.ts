@@ -26,7 +26,10 @@ export class DepartmentStore {
     readonly error = computed(() => this.state().error);
 
     // Actions
-    loadDepartments() {
+    loadDepartments(force: boolean = false) {
+        if (!force && this.state().departments.length > 0) {
+            return;
+        }
         this.setLoading(true);
         this.http.get<ApiResponse<Department[]>>(API_ENDPOINTS.DEPARTMENTS)
             .pipe(finalize(() => this.setLoading(false)))

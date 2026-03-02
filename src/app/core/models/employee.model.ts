@@ -10,6 +10,7 @@ export interface EmployeeApiResponse {
     managerId: string | null;
     dateOfJoining: string;
     employmentStatus: string;
+    role?: string;
     onboardingStep: number;
     profileCompletion: number;
     dateOfLeaving: string | null;
@@ -48,6 +49,7 @@ export interface Employee {
     dateOfJoining: string;
     dateOfLeaving: string | null;
     managerId: string | null;
+    role?: string;
     onboardingStep: number;
     profileCompletion: number;
     // Raw details for forms
@@ -85,6 +87,7 @@ export function mapEmployeeResponse(raw: EmployeeApiResponse): Employee {
         dateOfJoining: raw.dateOfJoining,
         dateOfLeaving: raw.dateOfLeaving,
         managerId: raw.managerId,
+        role: raw.role,
         onboardingStep: raw.onboardingStep,
         profileCompletion: raw.profileCompletion,
         personalDetails: raw.personalDetails,

@@ -26,7 +26,10 @@ export class LocationStore {
     readonly error = computed(() => this.state().error);
 
     // Actions
-    loadLocations() {
+    loadLocations(force: boolean = false) {
+        if (!force && this.state().locations.length > 0) {
+            return;
+        }
         this.setLoading(true);
         this.http.get<ApiResponse<WorkLocation[]>>(API_ENDPOINTS.LOCATIONS)
             .pipe(finalize(() => this.setLoading(false)))

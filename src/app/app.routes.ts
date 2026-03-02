@@ -17,11 +17,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/employees/employee-list.component').then(m => m.EmployeeListComponent),
         canActivate: [authGuard]
     },
-    {
-        path: 'employees/add',
-        loadComponent: () => import('./features/employees/employee-add.component').then(m => m.EmployeeAddComponent),
-        canActivate: [authGuard]
-    },
+
     {
         path: 'employees/onboard',
         loadComponent: () => import('./features/onboarding/onboarding.component').then(m => m.OnboardingComponent),

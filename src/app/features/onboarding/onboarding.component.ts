@@ -11,6 +11,7 @@ import { CommonInputComponent } from '../../shared/components/common-input.compo
 import { CommonSelectComponent } from '../../shared/components/common-select.component';
 import { CommonDatepickerComponent } from '../../shared/components/common-datepicker.component';
 import { LocationStore } from '../../store/location.store';
+import { GENDER_OPTIONS, MARITAL_OPTIONS, EMP_TYPE_OPTIONS, WORK_MODE_OPTIONS, TAX_OPTIONS, ROLE_OPTIONS, STATUS_OPTIONS } from './onboarding.constants';
 
 @Component({
   selector: 'app-onboarding',
@@ -25,120 +26,7 @@ import { LocationStore } from '../../store/location.store';
     CommonSelectComponent,
     CommonDatepickerComponent
   ],
-  template: `
-    <div class="max-w-4xl mx-auto py-8 px-4">
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-slate-900 border-none">Employee Onboarding</h1>
-        <p class="text-slate-500">Complete the recruitment journey for a new team member.</p>
-      </div>
-
-      <p-stepper [value]="activeStep()" (valueChange)="onStepChange($event)">
-        <p-step-list>
-          <p-step [value]="1">Account</p-step>
-          <p-step [value]="2">Personal</p-step>
-          <p-step [value]="3">Job</p-step>
-          <p-step [value]="4">Payroll</p-step>
-          <p-step [value]="5">Finalize</p-step>
-        </p-step-list>
-
-        <p-step-panels>
-          <!-- Step 1: Core Account -->
-          <p-step-panel [value]="1">
-            <ng-template pTemplate="content" let-nextCallback="nextCallback">
-              <p-card styleClass="!shadow-none !border-slate-200">
-                <form [formGroup]="step1Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <app-common-input formControlName="email" label="Work Email" type="email" [error]="getErrorMessage(step1Form, 'email')"></app-common-input>
-                  <app-common-input formControlName="password" label="Initial Password" type="password" [error]="getErrorMessage(step1Form, 'password')"></app-common-input>
-                  <app-common-input formControlName="employeeCode" label="Employee Code" [error]="getErrorMessage(step1Form, 'employeeCode')"></app-common-input>
-                  <app-common-select formControlName="departmentId" label="Department" [options]="deptOptions()" [error]="getErrorMessage(step1Form, 'departmentId')"></app-common-select>
-                  <app-common-select formControlName="workLocationId" label="Work Location" [options]="locationOptions()" [error]="getErrorMessage(step1Form, 'workLocationId')"></app-common-select>
-                  <app-common-datepicker formControlName="dateOfJoining" label="Joining Date" [error]="getErrorMessage(step1Form, 'dateOfJoining')"></app-common-datepicker>
-                </form>
-                <div class="flex justify-end mt-8">
-                  <p-button label="Next Step" icon="pi pi-arrow-right" iconPos="right" (onClick)="handleStep1(nextCallback)"></p-button>
-                </div>
-              </p-card>
-            </ng-template>
-          </p-step-panel>
-
-          <!-- Step 2: Personal Details -->
-          <p-step-panel [value]="2">
-            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
-              <p-card styleClass="!shadow-none !border-slate-200">
-                <form [formGroup]="step2Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <app-common-input formControlName="firstName" label="First Name" [error]="getErrorMessage(step2Form, 'firstName')"></app-common-input>
-                  <app-common-input formControlName="lastName" label="Last Name" [error]="getErrorMessage(step2Form, 'lastName')"></app-common-input>
-                  <app-common-input formControlName="mobile" label="Mobile Number" [error]="getErrorMessage(step2Form, 'mobile')"></app-common-input>
-                  <app-common-select formControlName="gender" label="Gender" [options]="genderOptions"></app-common-select>
-                  <app-common-datepicker formControlName="dob" label="Date of Birth"></app-common-datepicker>
-                  <app-common-select formControlName="maritalStatus" label="Marital Status" [options]="maritalOptions"></app-common-select>
-                </form>
-                <div class="flex justify-between mt-8">
-                  <p-button label="Back" icon="pi pi-arrow-left" [text]="true" (onClick)="prevCallback()"></p-button>
-                  <p-button label="Save & Next" icon="pi pi-arrow-right" iconPos="right" (onClick)="handleStep2(nextCallback)"></p-button>
-                </div>
-              </p-card>
-            </ng-template>
-          </p-step-panel>
-
-          <!-- Step 3: Job Details -->
-          <p-step-panel [value]="3">
-            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
-              <p-card styleClass="!shadow-none !border-slate-200">
-                <form [formGroup]="step3Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <app-common-input formControlName="designation" label="Designation"></app-common-input>
-                  <app-common-select formControlName="employmentType" label="Employment Type" [options]="empTypeOptions"></app-common-select>
-                  <app-common-select formControlName="workLocationType" label="Work Mode" [options]="workModeOptions"></app-common-select>
-                  <app-common-input formControlName="probationPeriod" label="Probation (Months)" type="number"></app-common-input>
-                  <app-common-input formControlName="noticePeriod" label="Notice Period (Days)" type="number"></app-common-input>
-                </form>
-                <div class="flex justify-between mt-8">
-                  <p-button label="Back" icon="pi pi-arrow-left" [text]="true" (onClick)="prevCallback()"></p-button>
-                  <p-button label="Save & Next" icon="pi pi-arrow-right" iconPos="right" (onClick)="handleStep3(nextCallback)"></p-button>
-                </div>
-              </p-card>
-            </ng-template>
-          </p-step-panel>
-
-          <!-- Step 4: Statutory -->
-          <p-step-panel [value]="4">
-            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
-              <p-card styleClass="!shadow-none !border-slate-200">
-                <form [formGroup]="step4Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <app-common-input formControlName="accountNumber" label="Bank Account Number"></app-common-input>
-                  <app-common-input formControlName="ifscCode" label="IFSC Code"></app-common-input>
-                  <app-common-input formControlName="pan" label="PAN Number"></app-common-input>
-                  <app-common-input formControlName="uan" label="PF UAN (Optional)"></app-common-input>
-                  <app-common-select formControlName="taxRegime" label="Tax Regime" [options]="taxOptions"></app-common-select>
-                </form>
-                <div class="flex justify-between mt-8">
-                  <p-button label="Back" icon="pi pi-arrow-left" [text]="true" (onClick)="prevCallback()"></p-button>
-                  <p-button label="Complete Setup" icon="pi pi-check" severity="success" (onClick)="handleStep4(nextCallback)"></p-button>
-                </div>
-              </p-card>
-            </ng-template>
-          </p-step-panel>
-
-          <!-- Step 5: Finalize -->
-          <p-step-panel [value]="5">
-            <ng-template pTemplate="content" let-prevCallback="prevCallback">
-              <p-card styleClass="!shadow-none !border-slate-200">
-                <div class="text-center py-8">
-                  <i class="pi pi-verified text-6xl text-emerald-500 mb-4"></i>
-                  <h3 class="text-xl font-bold">Ready to Activate!</h3>
-                  <p class="text-slate-500 mb-8 px-12">All mandatory details have been collected. Click below to finalize the onboarding and activate the employee profile.</p>
-                  <div class="flex justify-center gap-4">
-                    <p-button label="Back to Payroll" [text]="true" (onClick)="prevCallback()"></p-button>
-                    <p-button label="Finalize & Activate" severity="success" (onClick)="handleFinalize()"></p-button>
-                  </div>
-                </div>
-              </p-card>
-            </ng-template>
-          </p-step-panel>
-        </p-step-panels>
-      </p-stepper>
-    </div>
-  `
+  templateUrl: './onboarding.component.html'
 })
 export class OnboardingComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -164,7 +52,10 @@ export class OnboardingComponent implements OnInit {
     employeeCode: ['', [Validators.required]],
     departmentId: [null, [Validators.required]],
     workLocationId: [null, [Validators.required]],
-    dateOfJoining: [new Date(), [Validators.required]]
+    dateOfJoining: [new Date(), [Validators.required]],
+    role: ['employee', [Validators.required]],
+    status: ['probation', [Validators.required]],
+    managerId: [null]
   });
 
   step2Form: FormGroup = this.fb.group({
@@ -203,34 +94,22 @@ export class OnboardingComponent implements OnInit {
     this.locationStore.locations().map(l => ({ label: l.name, value: l.id }))
   );
 
-  genderOptions = [
-    { label: 'Male', value: 'Male' },
-    { label: 'Female', value: 'Female' },
-    { label: 'Other', value: 'Other' }
-  ];
-  maritalOptions = [
-    { label: 'Single', value: 'Single' },
-    { label: 'Married', value: 'Married' },
-    { label: 'Divorced', value: 'Divorced' }
-  ];
-  empTypeOptions = [
-    { label: 'Full-time', value: 'Full-time' },
-    { label: 'Contract', value: 'Contract' },
-    { label: 'Intern', value: 'Intern' }
-  ];
-  workModeOptions = [
-    { label: 'Office', value: 'Office' },
-    { label: 'Remote', value: 'Remote' },
-    { label: 'Hybrid', value: 'Hybrid' }
-  ];
-  taxOptions = [
-    { label: 'New Tax Regime', value: 'new' },
-    { label: 'Old Tax Regime', value: 'old' }
-  ];
+  genderOptions = GENDER_OPTIONS;
+  maritalOptions = MARITAL_OPTIONS;
+  empTypeOptions = EMP_TYPE_OPTIONS;
+  workModeOptions = WORK_MODE_OPTIONS;
+  taxOptions = TAX_OPTIONS;
+  roleOptions = ROLE_OPTIONS;
+  statusOptions = STATUS_OPTIONS;
+
+  employeeOptions = computed(() =>
+    this.store.employees().map(e => ({ label: e.email, value: e.id }))
+  );
 
   ngOnInit() {
     this.deptStore.loadDepartments();
     this.locationStore.loadLocations();
+    this.store.loadEmployees();
 
     // Check if resuming from ID
     this.route.params.subscribe(params => {
@@ -250,7 +129,10 @@ export class OnboardingComponent implements OnInit {
         employeeCode: emp.employeeCode,
         departmentId: emp.departmentId,
         workLocationId: emp.workLocationId,
-        dateOfJoining: emp.dateOfJoining ? new Date(emp.dateOfJoining) : new Date()
+        dateOfJoining: emp.dateOfJoining ? new Date(emp.dateOfJoining) : new Date(),
+        role: emp.role || 'employee',
+        status: emp.employmentStatus || 'probation',
+        managerId: emp.managerId || null
       });
 
       // 2. Pre-fill Step 2 (Personal)

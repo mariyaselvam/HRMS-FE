@@ -8,7 +8,7 @@
     </div>
 
     <!-- Navigation Links -->
-    <nav class="flex-1 p-4 space-y-1">
+    <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
         @for (item of navItems(); track item.route) {
         <a [routerLink]="item.route" routerLinkActive="sidebar-link-active"
             [routerLinkActiveOptions]="{ exact: item.exact ?? false }" class="sidebar-link">

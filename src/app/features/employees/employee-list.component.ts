@@ -4,8 +4,7 @@ import { EmployeeStore } from '../../store/employee.store';
 import { CommonTableComponent, Column } from '../../shared/components/common-table.component';
 import { CommonButtonComponent } from '../../shared/components/common-button.component';
 import { CardModule } from 'primeng/card';
-import { DialogModule } from 'primeng/dialog';
-import { EmployeeFormComponent, OnboardPayload } from './employee-form.component';
+
 import { Employee } from '../../core/models/employee.model';
 import { NotificationService } from '../../core/services/notification.service';
 import { Router } from '@angular/router';
@@ -13,7 +12,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-employee-list',
     standalone: true,
-    imports: [CommonModule, CommonTableComponent, CommonButtonComponent, CardModule, DialogModule, EmployeeFormComponent],
+    imports: [CommonModule, CommonTableComponent, CommonButtonComponent, CardModule],
     templateUrl: './employee-list.component.html'
 })
 export class EmployeeListComponent implements OnInit {
@@ -21,8 +20,7 @@ export class EmployeeListComponent implements OnInit {
     private notify = inject(NotificationService);
     private router = inject(Router);
 
-    showDialog = false;
-    editingEmployee: Employee | null = null;
+
 
     columns: Column[] = [
         { field: 'employeeCode', header: 'Employee Code' },
@@ -35,9 +33,7 @@ export class EmployeeListComponent implements OnInit {
         { field: 'employmentStatus', header: 'Status', type: 'status' }
     ];
 
-    get dialogTitle(): string {
-        return this.editingEmployee ? 'Edit Employee' : 'Onboard Employee';
-    }
+
 
     ngOnInit() {
         this.store.loadEmployees();
@@ -48,29 +44,7 @@ export class EmployeeListComponent implements OnInit {
     }
 
     onEdit(employee: Employee): void {
-        if (employee.profileCompletion < 100) {
-            // Resume onboarding
-            this.router.navigate(['/employees/onboard', employee.id]);
-        } else {
-            // Regular edit for active employees
-            this.editingEmployee = employee;
-            this.showDialog = true;
-        }
-    }
-
-    onSave(payload: OnboardPayload): void {
-        if (this.editingEmployee) {
-            this.store.updateEmployee(this.editingEmployee.id, payload as any);
-        } else {
-            this.store.onboardEmployee(payload);
-        }
-        this.showDialog = false;
-        this.editingEmployee = null;
-    }
-
-    onCancelDialog(): void {
-        this.showDialog = false;
-        this.editingEmployee = null;
+        this.router.navigate(['/employees/onboard', employee.id]);
     }
 
     onDelete(employee: Employee): void {

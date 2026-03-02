@@ -8,20 +8,10 @@
             (onClick)="openAddDialog()"></app-button>
     </div>
 
-    <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+    <p-card class="!shadow-sm !border-slate-200 dark:!border-slate-800">
 
         <app-common-table [data]="store.employees()" [columns]="columns" [hasActions]="true" (edit)="onEdit($event)"
             (delete)="onDelete($event)">
         </app-common-table>
     </p-card>
 </div>
-
-<!-- Onboard / Edit Employee Dialog -->
-<p-dialog [header]="dialogTitle" [(visible)]="showDialog" [modal]="true" [draggable]="false" [resizable]="false"
-    [style]="{ width: '680px' }" [breakpoints]="{ '768px': '95vw' }" styleClass="!rounded-2xl">
-
-    <app-employee-form [employeeData]="editingEmployee"
-        [submitLabel]="editingEmployee ? 'Update Employee' : 'Onboard Employee'" (save)="onSave($event)"
-        (cancel)="onCancelDialog()">
-    </app-employee-form>
-</p-dialog>
