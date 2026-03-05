@@ -23,6 +23,8 @@ export class CommonDatepickerComponent implements ControlValueAccessor {
     placeholder = input<string>('Select date');
     dateFormat = input<string>('yy-mm-dd');
     showIcon = input<boolean>(true);
+    timeOnly = input<boolean>(false);
+    hourFormat = input<string>('24');
     error = input<string | null>(null);
 
     disabled = signal<boolean>(false);
@@ -33,8 +35,15 @@ export class CommonDatepickerComponent implements ControlValueAccessor {
 
     writeValue(value: any): void {
         if (value) {
-            // Handle both string dates and Date objects
-            this.value = typeof value === 'string' ? new Date(value) : value;
+            if (this.timeOnly() && typeof value === 'string' && value.includes(':')) {
+                const [h, m] = value.split(':');
+                const d = new Date();
+                d.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
+                this.value = d;
+            } else {
+                // Handle both string dates and Date objects
+                this.value = typeof value === 'string' ? new Date(value) : value;
+            }
         } else {
             this.value = null;
         }
@@ -55,11 +64,17 @@ export class CommonDatepickerComponent implements ControlValueAccessor {
     onDateChange(date: Date | null): void {
         this.value = date;
         if (date) {
-            // Format as YYYY-MM-DD string for the backend
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            this.onChange(`${year}-${month}-${day}`);
+            if (this.timeOnly()) {
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                this.onChange(`${hours}:${minutes}`);
+            } else {
+                // Format as YYYY-MM-DD string for the backend
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                this.onChange(`${year}-${month}-${day}`);
+            }
         } else {
             this.onChange(null);
         }

@@ -7,7 +7,7 @@
             @for (col of columns(); track col.field) {
             <th [pSortableColumn]="col.field"
                 class="!py-4 !px-6 !text-slate-600 dark:!text-slate-400 !font-semibold !border-none">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 whitespace-nowrap">
                     {{ col.header }}
                     <p-sortIcon [field]="col.field" class="!text-[10px]"></p-sortIcon>
                 </div>
@@ -42,6 +42,11 @@
                 {{ resolveFieldValue(rowData, col.field) | date: 'shortTime' }}
                 } @else if (col.type === 'duration') {
                 {{ formatDuration(resolveFieldValue(rowData, col.field)) }}
+                } @else if (col.type === 'boolean') {
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                    [ngClass]="getStatusClass(resolveFieldValue(rowData, col.field) ? 'true' : 'false')">
+                    {{ resolveFieldValue(rowData, col.field) ? 'Yes' : 'No' }}
+                </span>
                 } @else {
                 {{ resolveFieldValue(rowData, col.field) }}
                 }
@@ -49,11 +54,12 @@
             }
             <td *ngIf="hasActions()"
                 class="!py-4 !px-6 !border-b !border-slate-100 dark:!border-slate-800 !bg-transparent">
-                <div class="flex gap-1">
-                    <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" size="small" severity="secondary"
-                        styleClass="!text-slate-400 dark:!text-slate-500" (click)="edit.emit(rowData)"></p-button>
-                    <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"
-                        (click)="delete.emit(rowData)"></p-button>
+                <div class="flex gap-1" *ngIf="rowData">
+                    <p-button *ngIf="showEdit()" icon="pi pi-pencil" [text]="true" [rounded]="true" size="small"
+                        severity="secondary" styleClass="!text-slate-400 dark:!text-slate-500"
+                        (click)="edit.emit(rowData)"></p-button>
+                    <p-button *ngIf="showDelete()" icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"
+                        size="small" (click)="delete.emit(rowData)"></p-button>
                 </div>
             </td>
         </tr>

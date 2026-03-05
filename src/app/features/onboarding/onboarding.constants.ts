@@ -38,3 +38,16 @@ export const STATUS_OPTIONS = [
     { label: 'Probation', value: 'probation' },
     { label: 'Notice', value: 'notice' }
 ];
+
+export const PT_STATE_OPTIONS = [
+    { label: 'Tamil Nadu', value: 'TN' },
+    { label: 'Maharashtra', value: 'MH' },
+    { label: 'Karnataka', value: 'KA' },
+    { label: 'West Bengal', value: 'WB' },
+    { label: 'Other', value: 'OTHER' }
+];
+
+export const YES_NO_OPTIONS = [
+    { label: 'Yes', value: true },
+    { label: 'No', value: false }
+];

@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AttendanceStore } from '../../store/attendance.store';
+import { ShiftManagementComponent } from './shift-management.component';
 import { CommonTableComponent, Column } from '../../shared/components/common-table.component';
 import { CommonButtonComponent } from '../../shared/components/common-button.component';
 import { CardModule } from 'primeng/card';
@@ -14,12 +15,14 @@ import { FormsModule } from '@angular/forms';
         CommonTableComponent,
         CommonButtonComponent,
         CardModule,
-        FormsModule
+        FormsModule,
+        ShiftManagementComponent
     ],
     templateUrl: './attendance.component.html'
 })
 export class AttendanceComponent implements OnInit, OnDestroy {
     protected store = inject(AttendanceStore);
+    view = signal<'logs' | 'shifts'>('logs');
 
     currentTime = new Date();
     private timer: any;

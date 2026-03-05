@@ -100,6 +100,16 @@ export class EmployeeStore {
             });
     }
 
+    saveBankDetails(id: string, payload: any) {
+        this.setLoading(true);
+        this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_BANK(id), payload)
+            .pipe(finalize(() => this.setLoading(false)))
+            .subscribe({
+                next: () => this.notify.success('Bank Details Saved', 'Information updated successfully.'),
+                error: (err) => this.handleError('Failed to save bank details', err)
+            });
+    }
+
     saveStatutoryDetails(id: string, payload: any) {
         this.setLoading(true);
         this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_STATUTORY(id), payload)
@@ -141,6 +151,11 @@ export class EmployeeStore {
                 next: () => this.notify.success('Salary Setup', 'Salary structure has been configured.'),
                 error: (err) => this.handleError('Salary Setup Failed', err)
             });
+    }
+
+    loadSalaryStructure(employeeId: string) {
+        return this.http.get<ApiResponse<any>>((API_ENDPOINTS as any).SALARY_STRUCTURE(employeeId))
+            .pipe(map(res => res.data));
     }
 
     addEmployee(employee: Partial<Employee>) {

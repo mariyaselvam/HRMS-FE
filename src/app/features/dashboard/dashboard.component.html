@@ -1,4 +1,4 @@
-<div class="space-y-8">
+<div class="space-y-8" *ngIf="store.summary() as summary">
     <!-- Welcome Section -->
     <section>
         <h2 class="text-3xl font-bold text-slate-900 dark:text-slate-100 border-none">Welcome Back, Admin!</h2>
@@ -11,16 +11,19 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Employees</p>
-                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">124</h3>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">{{ summary.employees.total }}
+                    </h3>
                 </div>
                 <div
                     class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                     <i class="pi pi-users text-xl"></i>
                 </div>
             </div>
-            <div class="mt-4 flex items-center text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                <i class="pi pi-arrow-up mr-1 text-[10px]"></i>
-                12% from last month
+            <div class="mt-4 flex flex-wrap gap-2">
+                <span *ngFor="let item of summary.employees.breakdown"
+                    class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    {{ item.status | titlecase }}: {{ item.count }}
+                </span>
             </div>
         </p-card>
 
@@ -28,7 +31,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Present Today</p>
-                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">118</h3>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">{{
+                        summary.attendance.presentToday }}</h3>
                 </div>
                 <div
                     class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
@@ -36,7 +40,8 @@
                 </div>
             </div>
             <div class="mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium">
-                95.1% Attendance Rate
+                {{ (summary.attendance.presentToday / summary.employees.total * 100) || 0 | number:'1.1-1' }}%
+                Attendance Rate
             </div>
         </p-card>
 
@@ -44,7 +49,8 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Leave Requests</p>
-                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">12</h3>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">{{
+                        summary.approvalsPending.leaves }}</h3>
                 </div>
                 <div
                     class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
@@ -52,23 +58,31 @@
                 </div>
             </div>
             <div class="mt-4 flex items-center text-xs text-amber-600 dark:text-amber-400 font-medium">
-                3 pending approval
+                {{ summary.approvalsPending.leaves }} pending approval
             </div>
         </p-card>
 
         <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
             <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Monthly Payroll</p>
-                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">$45,200</h3>
+                <div *ngIf="summary.latestPayroll; else noPayroll">
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Latest Payroll</p>
+                    <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">₹{{
+                        summary.latestPayroll.totalNetSalary | number }}</h3>
                 </div>
+                <ng-template #noPayroll>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Payroll</p>
+                        <h3 class="text-lg font-bold mt-1 text-slate-400">No finalized data</h3>
+                    </div>
+                </ng-template>
                 <div
                     class="w-12 h-12 rounded-2xl bg-violet-50 dark:bg-violet-950/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
                     <i class="pi pi-money-bill text-xl"></i>
                 </div>
             </div>
-            <div class="mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Due in 8 days
+            <div class="mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium"
+                *ngIf="summary.latestPayroll">
+                {{ summary.latestPayroll.month | date:'MMMM yyyy' }}
             </div>
         </p-card>
     </div>
@@ -85,26 +99,27 @@
 
         <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800" header="Upcoming Events">
             <div class="space-y-6">
+                <!-- Static for now, as backend doesn't have an events endpoint yet -->
                 <div class="flex gap-4">
                     <div
                         class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex flex-col items-center justify-center flex-shrink-0">
-                        <span class="text-xs font-bold text-slate-500 dark:text-slate-400">FEB</span>
-                        <span class="text-lg font-bold text-slate-900 dark:text-slate-100">24</span>
+                        <span class="text-xs font-bold text-slate-500 dark:text-slate-400">MAR</span>
+                        <span class="text-lg font-bold text-slate-900 dark:text-slate-100">08</span>
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100">Company Townhall</h4>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">10:00 AM - Online Meeting</p>
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100">International Women's Day</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Holiday - Office Closed</p>
                     </div>
                 </div>
                 <div class="flex gap-4">
                     <div
                         class="w-12 h-12 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 flex flex-col items-center justify-center flex-shrink-0 text-indigo-600 dark:text-indigo-400">
                         <span class="text-xs font-bold">MAR</span>
-                        <span class="text-lg font-bold">01</span>
+                        <span class="text-lg font-bold">15</span>
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100">Payroll Processing</h4>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Full Day - Finance Dept</p>
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-slate-100">Performance Reviews</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Full Month - All Depts</p>
                     </div>
                 </div>
             </div>
@@ -115,4 +130,8 @@
             </div>
         </p-card>
     </div>
+</div>
+
+<div *ngIf="store.loading()" class="h-64 flex items-center justify-center">
+    <i class="pi pi-spin pi-spinner text-4xl text-indigo-600"></i>
 </div>

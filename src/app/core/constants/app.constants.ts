@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
-    API_BASE_URL: 'https://hrms-be-7ll7.onrender.com/api/v1',
+    API_BASE_URL: 'http://localhost:3000/api/v1',
     PAGE_SIZE: 10,
     DATE_FORMAT: 'dd/MM/yyyy'
 };
@@ -9,12 +9,14 @@ export const API_ENDPOINTS = {
     EMPLOYEE_ONBOARD: '/employees/onboard',
     EMPLOYEE_PERSONAL: (id: string) => `/employees/${id}/personal`,
     EMPLOYEE_JOB: (id: string) => `/employees/${id}/job`,
+    EMPLOYEE_BANK: (id: string) => `/employees/${id}/bank`,
     EMPLOYEE_STATUTORY: (id: string) => `/employees/${id}/statutory`,
     EMPLOYEE_DOCUMENTS: (id: string) => `/employees/${id}/documents`,
     EMPLOYEE_FINALIZE: (id: string) => `/employees/${id}/finalize`,
     ATTENDANCE: '/attendance',
     PAYROLL: '/payroll',
     SALARY_SETUP: '/payroll/salary-setup',
+    SALARY_STRUCTURE: (id: string) => `/payroll/salary-structure/${id}`,
     LEAVE: '/leave',
     DASHBOARD: '/dashboard',
     AUTH: {
@@ -25,5 +27,7 @@ export const API_ENDPOINTS = {
     },
     ORG: '/org',
     DEPARTMENTS: '/org/departments',
-    LOCATIONS: '/org/locations'
+    TEAMS: '/org/teams',
+    LOCATIONS: '/org/locations',
+    HOLIDAYS: '/holidays'
 };

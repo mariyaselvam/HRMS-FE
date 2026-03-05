@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 export interface Column {
     field: string;
     header: string;
-    type?: 'text' | 'date' | 'time' | 'duration' | 'status' | 'progress' | 'action';
+    type?: 'text' | 'date' | 'time' | 'duration' | 'status' | 'progress' | 'action' | 'boolean';
 }
 
 @Component({
@@ -21,6 +21,8 @@ export class CommonTableComponent {
     data = input<any[]>([]);
     columns = input<Column[]>([]);
     hasActions = input<boolean>(false);
+    showEdit = input<boolean>(true);
+    showDelete = input<boolean>(true);
 
     edit = output<any>();
     delete = output<any>();

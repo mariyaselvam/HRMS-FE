@@ -22,6 +22,7 @@ export class CommonInputComponent implements ControlValueAccessor {
     id = input<string>('input-' + Math.random().toString(36).substring(2, 9));
     label = input<string>('');
     type = input<string>('text');
+    hint = input<string>('');
     error = input<string | null>(null);
     disabled = signal<boolean>(false);
     value: string = '';

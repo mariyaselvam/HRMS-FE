@@ -34,8 +34,18 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'teams',
+        loadComponent: () => import('./features/teams/team-list.component').then(m => m.TeamListComponent),
+        canActivate: [authGuard]
+    },
+    {
         path: 'branches',
         loadComponent: () => import('./features/locations/location-list.component').then(m => m.LocationListComponent),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'holidays',
+        loadComponent: () => import('./features/holidays/holiday-list.component').then(m => m.HolidayListComponent),
         canActivate: [authGuard]
     },
     {

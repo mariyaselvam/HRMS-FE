@@ -9,12 +9,13 @@
             <p-step [value]="1">Account</p-step>
             <p-step [value]="2">Personal</p-step>
             <p-step [value]="3">Job</p-step>
-            <p-step [value]="4">Payroll</p-step>
-            <p-step [value]="5">Documents</p-step>
-            <p-step [value]="6">Finalize</p-step>
+            <p-step [value]="4">Bank</p-step>
+            <p-step [value]="5">Salary</p-step>
+            <p-step [value]="6">Docs</p-step>
         </p-step-list>
 
         <p-step-panels>
+            <!-- ... Steps 1-3 remain mostly same ... -->
             <!-- Step 1: Core Account -->
             <p-step-panel [value]="1">
                 <ng-template pTemplate="content" let-nextCallback="nextCallback">
@@ -102,34 +103,116 @@
                 </ng-template>
             </p-step-panel>
 
-            <!-- Step 4: Statutory -->
+            <!-- Step 4: Bank Details -->
             <p-step-panel [value]="4">
                 <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
                     <p-card class="!shadow-none !border-slate-200">
+                        <h3 class="text-lg font-bold mb-6 text-slate-800">Bank Account Information</h3>
                         <form [formGroup]="step4Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <app-common-input formControlName="accountNumber"
-                                label="Bank Account Number"></app-common-input>
-                            <app-common-input formControlName="ifscCode" label="IFSC Code"></app-common-input>
-                            <app-common-input formControlName="pan" label="PAN Number"></app-common-input>
-                            <app-common-input formControlName="uan" label="PF UAN (Optional)"></app-common-input>
-                            <app-common-select formControlName="taxRegime" label="Tax Regime"
-                                [options]="taxOptions"></app-common-select>
+                            <app-common-input formControlName="accountNumber" label="Bank Account Number"
+                                [error]="getErrorMessage(step4Form, 'accountNumber')"></app-common-input>
+                            <app-common-input formControlName="ifscCode" label="IFSC Code"
+                                [error]="getErrorMessage(step4Form, 'ifscCode')"></app-common-input>
+                            <app-common-input formControlName="bankName" label="Bank Name"></app-common-input>
+                            <app-common-input formControlName="branchName" label="Branch Name"></app-common-input>
                         </form>
                         <div class="flex justify-between mt-8">
                             <p-button label="Back" icon="pi pi-arrow-left" [text]="true"
                                 (onClick)="prevCallback()"></p-button>
-                            <p-button label="Complete Setup" icon="pi pi-check" severity="success"
+                            <p-button label="Save & Next" icon="pi pi-arrow-right" iconPos="right"
                                 (onClick)="handleStep4(nextCallback)"></p-button>
                         </div>
                     </p-card>
                 </ng-template>
             </p-step-panel>
 
-            <!-- Step 5: Documents -->
+            <!-- Step 5: Compensation & Statutory (Indian Context) -->
             <p-step-panel [value]="5">
                 <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
                     <p-card class="!shadow-none !border-slate-200">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-8">
+                            <!-- Salary Details -->
+                            <div>
+                                <h3 class="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
+                                    <i class="pi pi-money-bill text-indigo-500"></i> Monthly Compensation (INR)
+                                </h3>
+                                <form [formGroup]="step5Form" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <app-common-input formControlName="ctc" label="Annual CTC" type="number"
+                                        hint="Total Cost to Company"></app-common-input>
+                                    <app-common-input formControlName="basicSalary" label="Basic Salary" type="number"
+                                        [error]="getErrorMessage(step5Form, 'basicSalary')"></app-common-input>
+                                    <app-common-input formControlName="hra" label="HRA"
+                                        type="number"></app-common-input>
+                                    <app-common-input formControlName="transportAllowance" label="Transport"
+                                        type="number"></app-common-input>
+                                    <app-common-input formControlName="otherAllowances" label="Special Allowance"
+                                        type="number"></app-common-input>
+                                    <app-common-datepicker formControlName="effectiveFrom"
+                                        label="Effective From"></app-common-datepicker>
+                                </form>
+                            </div>
+
+                            <hr class="border-slate-100 dark:border-slate-800">
+
+                            <!-- Statutory Details -->
+                            <div>
+                                <h3 class="text-lg font-bold mb-4 text-slate-800 flex items-center gap-2">
+                                    <i class="pi pi-shield text-emerald-500"></i> Statutory & Compliance
+                                </h3>
+                                <form [formGroup]="step5Form" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <app-common-input formControlName="pan" label="PAN Number"
+                                        [error]="getErrorMessage(step5Form, 'pan')"></app-common-input>
+                                    <app-common-input formControlName="uan"
+                                        label="PF UAN (Universal Acc)"></app-common-input>
+                                    <app-common-input formControlName="esiNumber" label="ESI Number"></app-common-input>
+
+                                    <app-common-select formControlName="ptState" label="PT State"
+                                        [options]="ptStateOptions"></app-common-select>
+                                    <app-common-select formControlName="taxRegime" label="Tax Regime"
+                                        [options]="taxOptions"></app-common-select>
+
+                                    <div class="flex items-center gap-4 pt-8">
+                                        <div class="flex items-center gap-2">
+                                            <input type="checkbox" formControlName="pfApplicable" id="pfApp"
+                                                class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500">
+                                            <label for="pfApp"
+                                                class="text-sm font-medium text-slate-700 dark:text-slate-300">PF
+                                                Eligible</label>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <input type="checkbox" formControlName="esiApplicable" id="esiApp"
+                                                class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500">
+                                            <label for="esiApp"
+                                                class="text-sm font-medium text-slate-700 dark:text-slate-300">ESI
+                                                Eligible</label>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <p-button label="Back" icon="pi pi-arrow-left" [text]="true"
+                                (onClick)="prevCallback()"></p-button>
+                            <p-button label="Save & Next" icon="pi pi-arrow-right" iconPos="right"
+                                (onClick)="handleStep5(nextCallback)"></p-button>
+                        </div>
+                    </p-card>
+                </ng-template>
+            </p-step-panel>
+
+            <!-- Step 6: Documents & Finalize -->
+            <p-step-panel [value]="6">
+                <ng-template pTemplate="content" let-prevCallback="prevCallback">
+                    <p-card class="!shadow-none !border-slate-200">
+                        <div class="mb-8">
+                            <h3 class="text-lg font-bold mb-2 text-slate-800">Final Verification</h3>
+                            <p class="text-sm text-slate-500">Upload mandatory documents and activate the employee
+                                profile.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                            <!-- Document Uploaders (Same as before) -->
                             <!-- Resume Upload -->
                             <div
                                 class="bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -234,29 +317,17 @@
                             </div>
                         </div>
 
-                        <div class="flex justify-between mt-8">
-                            <p-button label="Back" icon="pi pi-arrow-left" [text]="true"
-                                (onClick)="prevCallback()"></p-button>
-                            <p-button label="Upload & Continue" icon="pi pi-cloud-upload" iconPos="right"
-                                (onClick)="handleStep5(nextCallback)"></p-button>
-                        </div>
-                    </p-card>
-                </ng-template>
-            </p-step-panel>
-
-            <!-- Step 6: Finalize -->
-            <p-step-panel [value]="6">
-                <ng-template pTemplate="content" let-prevCallback="prevCallback">
-                    <p-card class="!shadow-none !border-slate-200">
-                        <div class="text-center py-8">
-                            <i class="pi pi-verified text-6xl text-emerald-500 mb-4"></i>
-                            <h3 class="text-xl font-bold">Ready to Activate!</h3>
-                            <p class="text-slate-500 mb-8 px-12">All mandatory details have been collected. Click below
-                                to finalize the onboarding and activate the employee profile.</p>
+                        <div
+                            class="text-center py-8 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <i class="pi pi-check-circle text-5xl text-emerald-500 mb-4 block"></i>
+                            <h3 class="text-xl font-bold mb-2">Ready to Activate</h3>
+                            <p class="text-slate-500 mb-8 max-w-md mx-auto">Clicking below will mark this onboarding as
+                                complete and activate the employee in the payroll cycle.</p>
                             <div class="flex justify-center gap-4">
-                                <p-button label="Back to Documents" [text]="true" (onClick)="prevCallback()"></p-button>
-                                <p-button label="Finalize & Activate" severity="success"
-                                    (onClick)="handleFinalize()"></p-button>
+                                <p-button label="Back" icon="pi pi-arrow-left" [text]="true"
+                                    (onClick)="prevCallback()"></p-button>
+                                <p-button label="Finalize & Save" icon="pi pi-verified" severity="success"
+                                    (onClick)="handleStep6()"></p-button>
                             </div>
                         </div>
                     </p-card>

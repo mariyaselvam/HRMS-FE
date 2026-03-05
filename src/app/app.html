@@ -4,8 +4,13 @@
 @if (authService.isLoggedIn()) {
 <!-- Authenticated Layout -->
 <div class="h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300">
+  <!-- Mobile Backdrop -->
+  <div *ngIf="sidebarVisible()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity"
+    (click)="toggleSidebar()"></div>
+
   <!-- Sidebar Component -->
-  <app-sidebar (logout)="onLogout()"></app-sidebar>
+  <app-sidebar [isOpen]="sidebarVisible()" (logout)="onLogout()"
+    (closeSidebar)="sidebarVisible.set(false)"></app-sidebar>
 
   <!-- Main Content -->
   <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -13,7 +18,9 @@
     <header
       class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 transition-colors duration-300">
       <div class="flex items-center gap-4">
-        <button class="md:hidden p-2 text-slate-500 dark:text-slate-400">
+        <button
+          class="md:hidden p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+          (click)="toggleSidebar()">
           <i class="pi pi-bars text-xl"></i>
         </button>
         <div class="relative hidden sm:block">

@@ -1,0 +1,71 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 border-none">Shift Configuration</h2>
+        <div class="flex gap-3">
+            <app-button label="Assign Shift" icon="pi pi-user-plus" variant="secondary"
+                (onClick)="showAssignShift = true"></app-button>
+            <app-button label="Create Shift" icon="pi pi-plus" variant="primary"
+                (onClick)="showCreateShift = true"></app-button>
+        </div>
+    </div>
+
+    <!-- Shifts Table -->
+    <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+        <app-common-table [data]="store.shifts()" [columns]="columns">
+        </app-common-table>
+    </p-card>
+
+    <!-- Create Shift Dialog -->
+    <p-dialog [(visible)]="showCreateShift" header="Create New Shift" [modal]="true" [style]="{width: '450px'}"
+        styleClass="p-fluid">
+        <form [formGroup]="shiftForm" (ngSubmit)="onCreateShift()" class="space-y-4 pt-4">
+            <app-common-input label="Shift Name" formControlName="name" placeholder="e.g. Morning Shift"
+                [error]="shiftForm.get('name')?.touched && shiftForm.get('name')?.invalid ? 'Required' : null">
+            </app-common-input>
+
+            <div class="grid grid-cols-2 gap-4">
+                <app-common-datepicker label="Start Time (24h)" formControlName="startTime" placeholder="09:00"
+                    [timeOnly]="true" hourFormat="24"
+                    [error]="shiftForm.get('startTime')?.touched && shiftForm.get('startTime')?.invalid ? 'Required' : null">
+                </app-common-datepicker>
+                <app-common-datepicker label="End Time (24h)" formControlName="endTime" placeholder="18:00"
+                    [timeOnly]="true" hourFormat="24"
+                    [error]="shiftForm.get('endTime')?.touched && shiftForm.get('endTime')?.invalid ? 'Required' : null">
+                </app-common-datepicker>
+            </div>
+
+            <app-common-input label="Grace Period (Minutes)" formControlName="graceMinutes" type="number"
+                [error]="shiftForm.get('graceMinutes')?.touched && shiftForm.get('graceMinutes')?.invalid ? 'Must be 0-60' : null">
+            </app-common-input>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <app-button label="Cancel" variant="secondary" (onClick)="showCreateShift = false"></app-button>
+                <app-button label="Save Shift" variant="primary" type="submit" [disabled]="shiftForm.invalid"
+                    [loading]="store.loading()"></app-button>
+            </div>
+        </form>
+    </p-dialog>
+
+    <!-- Assign Shift Dialog -->
+    <p-dialog [(visible)]="showAssignShift" header="Assign Shift to Employee" [modal]="true" [style]="{width: '450px'}"
+        styleClass="p-fluid">
+        <form [formGroup]="assignForm" (ngSubmit)="onAssignShift()" class="space-y-4 pt-4">
+            <app-common-select label="Select Employee" formControlName="employeeId" [options]="employeeOptions"
+                placeholder="Choose employee">
+            </app-common-select>
+
+            <app-common-select label="Select Shift" formControlName="shiftId" [options]="shiftOptions"
+                placeholder="Choose shift">
+            </app-common-select>
+
+            <app-common-datepicker label="Effective From" formControlName="effectiveFrom">
+            </app-common-datepicker>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <app-button label="Cancel" variant="secondary" (onClick)="showAssignShift = false"></app-button>
+                <app-button label="Assign" variant="primary" type="submit" [disabled]="assignForm.invalid"
+                    [loading]="store.loading()"></app-button>
+            </div>
+        </form>
+    </p-dialog>
+</div>

@@ -6,7 +6,8 @@ import {
     CheckInInput,
     CheckOutInput,
     CreateShiftInput,
-    AttendanceLogFilters
+    AttendanceLogFilters,
+    AssignShiftInput
 } from '../core/models/attendance.model';
 import { BaseHttpService } from '../core/services/base-http.service';
 import { API_ENDPOINTS } from '../core/constants/app.constants';
@@ -127,6 +128,18 @@ export class AttendanceStore {
                     this.notify.success('Shift Created', `Successfully created ${res.data.name} shift`);
                 },
                 error: (err) => this.handleError('Failed to create shift', err)
+            });
+    }
+
+    assignShift(data: AssignShiftInput) {
+        this.setLoading(true);
+        this.http.post<ApiResponse<any>>(`${API_ENDPOINTS.ATTENDANCE}/assign-shift`, data)
+            .pipe(finalize(() => this.setLoading(false)))
+            .subscribe({
+                next: () => {
+                    this.notify.success('Shift Assigned', 'Shift successfully assigned to employee');
+                },
+                error: (err) => this.handleError('Failed to assign shift', err)
             });
     }
 

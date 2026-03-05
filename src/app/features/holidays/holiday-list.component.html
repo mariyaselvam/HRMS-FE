@@ -1,0 +1,39 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center px-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 border-none">Holidays</h1>
+            <p class="text-slate-500">Manage company holiday calendar</p>
+        </div>
+        <app-button label="Add Holiday" icon="pi pi-plus" variant="primary" (onClick)="openAddDialog()"></app-button>
+    </div>
+
+    <p-card styleClass="!shadow-sm !border-slate-200">
+        <app-common-table [data]="store.holidays()" [columns]="columns" [hasActions]="true" [showEdit]="false"
+            (delete)="onDelete($event)">
+        </app-common-table>
+    </p-card>
+</div>
+
+<!-- Add Holiday Dialog -->
+<p-dialog header="Add New Holiday" [(visible)]="showDialog" [modal]="true" [draggable]="false" [resizable]="false"
+    [style]="{ width: '450px' }" styleClass="!rounded-2xl">
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 pt-4">
+        <app-common-datepicker label="Holiday Date" formControlName="date" [error]="getErrorMessage('date')">
+        </app-common-datepicker>
+
+        <app-common-input label="Holiday Name" formControlName="name" placeholder="e.g. Independence Day"
+            [error]="getErrorMessage('name')">
+        </app-common-input>
+
+        <div class="flex items-center gap-2 py-2">
+            <p-checkbox formControlName="isOptional" [binary]="true" inputId="isOptional"></p-checkbox>
+            <label for="isOptional" class="text-sm font-medium text-slate-700">Optional Holiday</label>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+            <app-button label="Cancel" variant="secondary" (onClick)="showDialog = false"></app-button>
+            <app-button type="submit" label="Save Holiday" icon="pi pi-check" variant="primary"></app-button>
+        </div>
+    </form>
+</p-dialog>

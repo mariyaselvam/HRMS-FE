@@ -1,4 +1,4 @@
-import { Component, output, computed } from '@angular/core';
+import { Component, output, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SIDEBAR_NAV_ITEMS, SIDEBAR_APP_TITLE, SidebarNavItem } from '../../../core/constants/sidebar.constants';
@@ -13,6 +13,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class SidebarComponent {
     authService = inject(AuthService);
+    isOpen = input<boolean>(false);
     readonly appTitle: string = SIDEBAR_APP_TITLE;
     readonly logo: string = '/logo1.png';
 
@@ -24,8 +25,13 @@ export class SidebarComponent {
     });
 
     logout = output<void>();
+    closeSidebar = output<void>();
 
     onLogout(): void {
         this.logout.emit();
+    }
+
+    onLinkClick(): void {
+        this.closeSidebar.emit();
     }
 }

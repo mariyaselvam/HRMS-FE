@@ -4,5 +4,7 @@
         [disabled]="disabled()" [(ngModel)]="value" (ngModelChange)="onValueChange($event)" (blur)="onBlur()" />
     @if (error()) {
     <small class="text-rose-500 text-xs font-medium">{{ error() }}</small>
+    } @else if (hint()) {
+    <small class="text-slate-400 text-xs">{{ hint() }}</small>
     }
 </div>

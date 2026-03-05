@@ -71,3 +71,9 @@ export interface AttendanceLogFilters {
     endDate?: string;    // YYYY-MM-DD
     employeeId?: string; // optional UUID
 }
+
+export interface AssignShiftInput {
+    employeeId: string;
+    shiftId: string;
+    effectiveFrom: string; // YYYY-MM-DD
+}

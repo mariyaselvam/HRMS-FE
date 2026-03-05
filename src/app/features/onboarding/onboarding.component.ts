@@ -11,7 +11,7 @@ import { CommonInputComponent } from '../../shared/components/common-input.compo
 import { CommonSelectComponent } from '../../shared/components/common-select.component';
 import { CommonDatepickerComponent } from '../../shared/components/common-datepicker.component';
 import { LocationStore } from '../../store/location.store';
-import { GENDER_OPTIONS, MARITAL_OPTIONS, EMP_TYPE_OPTIONS, WORK_MODE_OPTIONS, TAX_OPTIONS, ROLE_OPTIONS, STATUS_OPTIONS } from './onboarding.constants';
+import { GENDER_OPTIONS, MARITAL_OPTIONS, EMP_TYPE_OPTIONS, WORK_MODE_OPTIONS, TAX_OPTIONS, ROLE_OPTIONS, STATUS_OPTIONS, PT_STATE_OPTIONS } from './onboarding.constants';
 
 @Component({
   selector: 'app-onboarding',
@@ -83,8 +83,23 @@ export class OnboardingComponent implements OnInit {
   step4Form: FormGroup = this.fb.group({
     accountNumber: ['', [Validators.pattern(/^\d{9,18}$/)]],
     ifscCode: ['', [Validators.pattern(/^[A-Z]{4}0[A-Z0-9]{6}$/)]],
+    bankName: [''],
+    branchName: ['']
+  });
+
+  step5Form: FormGroup = this.fb.group({
+    ctc: [0, [Validators.required, Validators.min(0)]],
+    basicSalary: [0, [Validators.required, Validators.min(0)]],
+    hra: [0, [Validators.min(0)]],
+    transportAllowance: [0, [Validators.min(0)]],
+    otherAllowances: [0, [Validators.min(0)]],
+    effectiveFrom: [new Date(), [Validators.required]],
     pan: ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
     uan: [''],
+    esiNumber: [''],
+    pfApplicable: [false],
+    esiApplicable: [false],
+    ptState: ['TN'],
     taxRegime: ['new']
   });
 
@@ -104,6 +119,7 @@ export class OnboardingComponent implements OnInit {
   taxOptions = TAX_OPTIONS;
   roleOptions = ROLE_OPTIONS;
   statusOptions = STATUS_OPTIONS;
+  ptStateOptions = PT_STATE_OPTIONS;
 
   employeeOptions = computed(() =>
     this.store.employees().map(e => ({ label: e.email, value: e.id }))
@@ -113,6 +129,19 @@ export class OnboardingComponent implements OnInit {
     this.deptStore.loadDepartments();
     this.locationStore.loadLocations();
     this.store.loadEmployees();
+
+    // Watch CTC to auto-calculate breakdown
+    this.step5Form.get('ctc')?.valueChanges.subscribe(ctc => {
+      if (ctc > 0 && this.step5Form.get('basicSalary')?.pristine) {
+        const basic = Math.round(ctc * 0.5 / 12); // 50% of CTC monthly
+        const hra = Math.round(basic * 0.4); // 40% of Basic
+        this.step5Form.patchValue({
+          basicSalary: basic,
+          hra: hra,
+          otherAllowances: Math.round((ctc / 12) - basic - hra)
+        }, { emitEvent: false });
+      }
+    });
 
     // Check if resuming from ID
     this.route.params.subscribe(params => {
@@ -151,20 +180,39 @@ export class OnboardingComponent implements OnInit {
         this.step3Form.patchValue(emp.jobDetails);
       }
 
-      // 4. Pre-fill Step 4 (Statutory/Bank)
-      if (emp.bankDetails || emp.statutoryDetails) {
-        this.step4Form.patchValue({
-          accountNumber: emp.bankDetails?.accountNumber,
-          ifscCode: emp.bankDetails?.ifscCode,
-          pan: emp.statutoryDetails?.pan,
-          uan: emp.statutoryDetails?.uan,
-          taxRegime: emp.statutoryDetails?.taxRegime
+      // 4. Pre-fill Step 4 (Bank)
+      if (emp.bankDetails) {
+        this.step4Form.patchValue(emp.bankDetails);
+      }
+
+      // 5. Pre-fill Step 5 (Compensation & Statutory)
+      if (emp.statutoryDetails) {
+        this.step5Form.patchValue({
+          pan: emp.statutoryDetails.pan,
+          uan: emp.statutoryDetails.uan,
+          esiNumber: emp.statutoryDetails.esiNumber,
+          pfApplicable: emp.statutoryDetails.pfApplicable,
+          esiApplicable: emp.statutoryDetails.esiApplicable,
+          ptState: emp.statutoryDetails.ptState,
+          taxRegime: emp.statutoryDetails.taxRegime
         });
       }
 
-      // 5. Jump to correct step
-      // If the backend says the next step is 3, they finished 2.
-      // So we set activeStep to what the backend says.
+      // Load most recent salary structure
+      this.store.loadSalaryStructure(id).subscribe(salary => {
+        if (salary) {
+          this.step5Form.patchValue({
+            basicSalary: Number(salary.basicSalary),
+            hra: Number(salary.hra),
+            transportAllowance: Number(salary.transportAllowance),
+            otherAllowances: Number(salary.otherAllowances),
+            effectiveFrom: new Date(salary.effectiveFrom),
+            ctc: (Number(salary.grossSalary) * 12) // Simplified approximation
+          });
+        }
+      });
+
+      // 6. Jump to correct step
       this.activeStep.set(emp.onboardingStep || 1);
     });
   }
@@ -176,6 +224,7 @@ export class OnboardingComponent implements OnInit {
       if (control.errors?.['email']) return 'Invalid email';
       if (control.errors?.['pattern']) return 'Invalid format';
       if (control.errors?.['minlength']) return `Min ${control.errors['minlength'].requiredLength} chars`;
+      if (control.errors?.['min']) return `Value must be at least ${control.errors['min'].min}`;
     }
     return null;
   }
@@ -220,21 +269,52 @@ export class OnboardingComponent implements OnInit {
       this.step4Form.markAllAsTouched();
       return;
     }
-    this.store.saveStatutoryDetails(this.employeeId()!, this.step4Form.value);
+    this.store.saveBankDetails(this.employeeId()!, this.step4Form.value);
     this.activeStep.set(5);
     if (typeof nextCallback === 'function') nextCallback();
   }
 
-  // --- Step 5: Documents ---
+  handleStep5(nextCallback: any) {
+    if (this.step5Form.invalid) {
+      this.step5Form.markAllAsTouched();
+      return;
+    }
+
+    const val = this.step5Form.value;
+
+    // Save Statutory Details
+    this.store.saveStatutoryDetails(this.employeeId()!, {
+      pan: val.pan,
+      uan: val.uan,
+      esiNumber: val.esiNumber,
+      pfApplicable: val.pfApplicable,
+      esiApplicable: val.esiApplicable,
+      ptState: val.ptState,
+      taxRegime: val.taxRegime
+    });
+
+    // Save Salary/Compensation
+    this.store.setupSalary({
+      employeeId: this.employeeId()!,
+      basicSalary: val.basicSalary,
+      hra: val.hra,
+      transportAllowance: val.transportAllowance,
+      otherAllowances: val.otherAllowances,
+      effectiveFrom: val.effectiveFrom
+    });
+
+    this.activeStep.set(6);
+    if (typeof nextCallback === 'function') nextCallback();
+  }
+
+  // --- Step 6: Documents ---
   onFileSelect(event: Event, type: string) {
     const element = event.target as HTMLInputElement;
     if (element.files && element.files.length > 0) {
       const file = element.files[0];
-      // Create object URL for simple preview if image, otherwise just icon
       const previewUrl = file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined;
 
       this.uploadedFiles.update(files => {
-        // Remove existing of same type if present
         const filtered = files.filter(f => f.type !== type);
         return [...filtered, { file, type, previewUrl }];
       });
@@ -253,13 +333,7 @@ export class OnboardingComponent implements OnInit {
     });
   }
 
-  handleStep5(nextCallback: any) {
-    if (this.uploadedFiles().length === 0) {
-      // If we want to force files:
-      // return;
-    }
-
-    // Only upload if we actually have files
+  handleStep6() {
     if (this.uploadedFiles().length > 0) {
       const formData = new FormData();
       this.uploadedFiles().forEach(f => {
@@ -269,11 +343,6 @@ export class OnboardingComponent implements OnInit {
       this.store.saveDocuments(this.employeeId()!, formData);
     }
 
-    this.activeStep.set(6);
-    if (typeof nextCallback === 'function') nextCallback();
-  }
-
-  handleFinalize() {
     this.store.finalizeOnboarding(this.employeeId()!);
     this.router.navigate(['/employees']);
   }

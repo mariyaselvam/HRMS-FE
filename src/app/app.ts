@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -28,6 +28,11 @@ export class App {
     title = 'hrms-fe';
     authService = inject(AuthService);
     themeService = inject(ThemeService);
+    sidebarVisible = signal(false);
+
+    toggleSidebar(): void {
+        this.sidebarVisible.update(v => !v);
+    }
 
     onLogout(): void {
         this.authService.logout();
