@@ -26,6 +26,7 @@ export class CommonSelectComponent implements ControlValueAccessor {
     optionValue = input<string>('value');
     placeholder = input<string>('');
     error = input<string | null>(null);
+    appendTo = input<any>('body');
     disabled = signal<boolean>(false);
     value: any = null;
 

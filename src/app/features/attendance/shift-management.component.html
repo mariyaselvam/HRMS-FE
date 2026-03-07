@@ -1,6 +1,5 @@
 <div class="space-y-6">
-    <div class="flex justify-between items-center">
-        <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 border-none">Shift Configuration</h2>
+    <div class="flex justify-end mb-6">
         <div class="flex gap-3">
             <app-button label="Assign Shift" icon="pi pi-user-plus" variant="secondary"
                 (onClick)="showAssignShift = true"></app-button>
@@ -10,14 +9,14 @@
     </div>
 
     <!-- Shifts Table -->
-    <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+    <p-card class="!shadow-sm !border-slate-200 dark:!border-slate-800">
         <app-common-table [data]="store.shifts()" [columns]="columns">
         </app-common-table>
     </p-card>
 
     <!-- Create Shift Dialog -->
     <p-dialog [(visible)]="showCreateShift" header="Create New Shift" [modal]="true" [style]="{width: '450px'}"
-        styleClass="p-fluid">
+        class="p-fluid">
         <form [formGroup]="shiftForm" (ngSubmit)="onCreateShift()" class="space-y-4 pt-4">
             <app-common-input label="Shift Name" formControlName="name" placeholder="e.g. Morning Shift"
                 [error]="shiftForm.get('name')?.touched && shiftForm.get('name')?.invalid ? 'Required' : null">

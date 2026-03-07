@@ -24,8 +24,14 @@ export class CommonTableComponent {
     showEdit = input<boolean>(true);
     showDelete = input<boolean>(true);
 
+    // Lazy Loading properties
+    lazy = input<boolean>(false);
+    rows = input<number>(10);
+    totalRecords = input<number>(0);
+
     edit = output<any>();
     delete = output<any>();
+    onLazyLoad = output<any>();
 
     resolveFieldValue(rowData: any, field: string): any {
         if (!field) return '';

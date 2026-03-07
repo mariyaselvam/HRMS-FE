@@ -25,6 +25,9 @@ export class AttendanceStore {
     // State
     private state = signal<AttendanceState>({
         logs: [],
+        totalLogs: 0,
+        page: 1,
+        limit: 10,
         shifts: [],
         todayStatus: null,
         loading: false,
@@ -33,6 +36,9 @@ export class AttendanceStore {
 
     // Selectors
     readonly logs = computed(() => this.state().logs);
+    readonly totalLogs = computed(() => this.state().totalLogs);
+    readonly page = computed(() => this.state().page);
+    readonly limit = computed(() => this.state().limit);
     readonly shifts = computed(() => this.state().shifts);
     readonly todayStatus = computed(() => this.state().todayStatus);
     readonly loading = computed(() => this.state().loading);
@@ -41,16 +47,24 @@ export class AttendanceStore {
     // ─── Flow 4: GET /attendance/logs ─────────────────────────────────────────
     loadLogs(filters: AttendanceLogFilters = {}) {
         this.setLoading(true);
-        this.http.get<ApiResponse<AttendanceLog[]>>(`${API_ENDPOINTS.ATTENDANCE}/logs`, filters)
+        this.state.update(s => ({ ...s, logs: [] })); // Clear previous data
+        this.http.get<ApiResponse<{ records: AttendanceLog[], total: number }>>(`${API_ENDPOINTS.ATTENDANCE}/logs`, filters)
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => {
-                    this.state.update(s => ({ ...s, logs: res.data }));
+                    const { records, total } = res.data;
+                    this.state.update(s => ({
+                        ...s,
+                        logs: records,
+                        totalLogs: total,
+                        page: filters.page ?? s.page,
+                        limit: filters.limit ?? s.limit
+                    }));
+
                     // Compare using local date to avoid UTC offset issues (e.g. IST +5:30)
                     const now = new Date();
                     const todayLocal = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-                    const todayLog = res.data.find(l => {
-                        // attendanceDate comes as "2026-02-22T00:00:00.000Z" — use UTC date part
+                    const todayLog = records.find(l => {
                         const logDate = l.attendanceDate ? l.attendanceDate.split('T')[0] : '';
                         return logDate === todayLocal;
                     });
@@ -59,6 +73,26 @@ export class AttendanceStore {
                     }
                 },
                 error: (err) => this.handleError('Failed to load attendance logs', err)
+            });
+    }
+
+    loadAdminLogs(filters: AttendanceLogFilters = {}) {
+        this.setLoading(true);
+        this.state.update(s => ({ ...s, logs: [] })); // Clear previous data
+        this.http.get<ApiResponse<{ records: AttendanceLog[], total: number }>>(`${API_ENDPOINTS.ATTENDANCE_ADMIN_LOGS}`, filters)
+            .pipe(finalize(() => this.setLoading(false)))
+            .subscribe({
+                next: (res) => {
+                    const { records, total } = res.data;
+                    this.state.update(s => ({
+                        ...s,
+                        logs: records,
+                        totalLogs: total,
+                        page: filters.page ?? s.page,
+                        limit: filters.limit ?? s.limit
+                    }));
+                },
+                error: (err) => this.handleError('Failed to load all attendance logs', err)
             });
     }
 

@@ -1,4 +1,5 @@
-<p-table [value]="data()" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'" [styleClass]="'p-datatable-sm'"
+<p-table [value]="data()" [lazy]="lazy()" [totalRecords]="totalRecords()" [loading]="false" [paginator]="true"
+    [rows]="rows()" (onLazyLoad)="onLazyLoad.emit($event)" [responsiveLayout]="'scroll'" [styleClass]="'p-datatable-sm'"
     [scrollable]="true" scrollHeight="calc(100vh - 300px)"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
 

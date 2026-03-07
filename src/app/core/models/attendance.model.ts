@@ -39,6 +39,9 @@ export interface AttendanceLog {
 
 export interface AttendanceState {
     logs: AttendanceLog[];
+    totalLogs: number;
+    page: number;
+    limit: number;
     shifts: Shift[];
     todayStatus: AttendanceLog | null;
     loading: boolean;
@@ -70,6 +73,10 @@ export interface AttendanceLogFilters {
     startDate?: string;  // YYYY-MM-DD
     endDate?: string;    // YYYY-MM-DD
     employeeId?: string; // optional UUID
+    status?: AttendanceStatus;
+    search?: string;
+    page?: number;
+    limit?: number;
 }
 
 export interface AssignShiftInput {

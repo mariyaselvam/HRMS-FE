@@ -15,17 +15,61 @@
     .dark body {
         @apply bg-slate-950 text-slate-100;
     }
+
+    /* Custom Slim Scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-slate-300 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-400;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+        @apply bg-slate-700;
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-600;
+    }
+
+    /* Firefox support */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 transparent;
+    }
+
+    .dark * {
+        scrollbar-color: #334155 transparent;
+    }
 }
 
 @layer components {
 
     /* Side navigation styling */
     .sidebar-link {
-        @apply flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors font-medium;
+        @apply flex items-center gap-3 p-3 rounded-xl text-slate-600 transition-colors font-medium;
+    }
+
+    .sidebar-link:hover {
+        @apply bg-slate-50 text-indigo-600;
     }
 
     .dark .sidebar-link {
-        @apply text-slate-400 hover:bg-slate-900 hover:text-indigo-400;
+        @apply text-slate-400;
+    }
+
+    .dark .sidebar-link:hover {
+        @apply bg-slate-900 text-indigo-400;
     }
 
     .sidebar-link-active {
@@ -38,7 +82,7 @@
 
     /* PrimeNG Component Overrides */
     .p-card {
-        @apply !shadow-sm !border !border-slate-200 !rounded-2xl overflow-hidden transition-all duration-200;
+        @apply !shadow-sm !border !border-slate-200 !rounded-2xl transition-all duration-200;
     }
 
     .dark .p-card {
@@ -60,8 +104,140 @@
     }
 
     .dark .p-inputtext,
-    .dark .p-select {
+    .dark .p-select,
+    .dark .p-datepicker-input {
         @apply !bg-slate-900 !border-slate-800 !text-slate-100;
+    }
+
+    .p-select:not(.p-disabled).p-focus,
+    .p-inputtext:enabled:focus,
+    .p-datepicker-input:enabled:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
+    }
+
+    /* Fixed Select Dropdown and List */
+    .p-select-overlay {
+        @apply !bg-white !border !border-slate-200 !shadow-xl !rounded-xl !mt-2;
+    }
+
+    .dark .p-select-overlay {
+        @apply !bg-slate-900 !border-slate-800 !shadow-2xl;
+    }
+
+    .p-select-list {
+        @apply !p-1;
+    }
+
+    .p-select-option {
+        @apply !rounded-lg !px-3 !py-2 !text-sm !transition-colors;
+    }
+
+    .p-select-option.p-highlight {
+        @apply !bg-indigo-50 !text-indigo-700 !important;
+    }
+
+    .dark .p-select-option.p-highlight {
+        @apply !bg-indigo-500/20 !text-indigo-300 !important;
+    }
+
+    .p-select-option:not(.p-highlight):hover {
+        @apply !bg-slate-50;
+    }
+
+    .dark .p-select-option:not(.p-highlight):hover {
+        @apply !bg-slate-800;
+    }
+
+    /* Icon Field Layout Fixes - Ensuring NO OVERLAP */
+    .p-iconfield {
+        @apply !flex !items-center !relative w-full;
+    }
+
+    .p-inputicon {
+        @apply !absolute !left-3 !top-1/2 !-translate-y-1/2 !text-slate-500 !z-10 !pointer-events-none !text-base;
+    }
+
+    .dark .p-inputicon {
+        @apply !text-slate-400;
+    }
+
+    /* Target the input within a field icon specifically */
+    .p-iconfield .p-inputtext,
+    .p-iconfield .p-datepicker-input {
+        @apply !pl-10 !important;
+    }
+
+    /* Improved Input Colors & STRICT UNIFORM HEIGHT */
+    .p-inputtext,
+    .p-select,
+    .p-datepicker-input {
+        @apply !bg-slate-100/50 !border-slate-300 !text-slate-800 !h-[44px] !transition-all !shadow-sm;
+    }
+
+    .p-inputtext:hover,
+    .p-select:hover,
+    .p-datepicker-input:hover,
+    .p-select.p-focus {
+        @apply !border-indigo-400;
+    }
+
+    .p-inputtext:focus,
+    .p-datepicker-input:focus {
+        @apply !border-indigo-500 !outline-none;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1) !important;
+    }
+
+    .p-inputtext,
+    .p-datepicker-input {
+        @apply !px-4 !leading-[44px] !py-0;
+    }
+
+    .dark .p-inputtext,
+    .dark .p-select,
+    .dark .p-datepicker-input {
+        @apply !bg-[#0f172a] !border-slate-800 !text-slate-200 !placeholder-slate-500;
+    }
+
+    /* Ensure internal alignment for Select */
+    .p-select-label {
+        @apply !py-0 !px-4 !flex !items-center !h-full !text-sm !font-medium;
+    }
+
+    /* Ensure consistent text padding and placeholder style */
+    .p-inputtext,
+    .p-datepicker-input {
+        @apply !text-sm;
+    }
+
+    .p-inputtext::placeholder,
+    .p-datepicker-input::placeholder {
+        @apply !text-slate-400 !opacity-100;
+    }
+
+    /* Specific adjustment for grouped icons */
+    .p-iconfield .p-inputicon {
+        @apply !text-lg;
+        /* Slightly larger icon for better visual weight */
+    }
+
+    .p-datepicker .p-datepicker-trigger {
+        @apply !text-slate-400 !w-10 !flex !items-center !justify-center;
+    }
+
+
+    /* Datepicker & Popover Overlays */
+    .p-popover {
+        @apply !z-[1000] !shadow-2xl;
+    }
+
+    .p-datepicker,
+    .p-select-overlay {
+        @apply !z-[1100] !shadow-2xl;
+    }
+
+    .p-popover-content {
+        @apply !p-0;
     }
 
     .dark .p-datatable {
@@ -97,7 +273,7 @@
 
     /* Dialog & Modal Overrides */
     .dark .p-dialog {
-        @apply !bg-slate-900 !text-slate-100 !border !border-slate-800 !rounded-2xl !shadow-2xl;
+        @apply !bg-slate-900 !text-slate-100 !border !border-slate-800 !rounded-2xl !shadow-2xl !overflow-hidden;
     }
 
     .dark .p-dialog .p-dialog-header,
