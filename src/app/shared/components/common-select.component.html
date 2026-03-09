@@ -1,9 +1,10 @@
 <div class="flex flex-col gap-2 w-full">
-    <label [for]="id()" class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.1em]">{{
+    <label [for]="id()" class="text-[10px] font-bold uppercase tracking-[0.1em]">{{
         label() }}</label>
     <p-select [inputId]="id()" [options]="options()" [(ngModel)]="value" [optionLabel]="optionLabel()"
         [optionValue]="optionValue()" [placeholder]="placeholder()" [disabled]="disabled()" [appendTo]="appendTo()"
-        (ngModelChange)="onValueChange($event)" (onBlur)="onBlur()" [class.select-error]="error()" />
+        (ngModelChange)="onValueChange($event)" (onBlur)="onBlur()" class="form-select"
+        [class.select-error]="error()" />
     @if (error()) {
     <small class="text-rose-500 text-xs font-medium">{{ error() }}</small>
     }

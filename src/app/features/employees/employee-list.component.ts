@@ -43,6 +43,10 @@ export class EmployeeListComponent implements OnInit {
         this.router.navigate(['/employees/onboard']);
     }
 
+    onView(employee: Employee): void {
+        this.router.navigate(['/employees', employee.id]);
+    }
+
     onEdit(employee: Employee): void {
         this.router.navigate(['/employees/onboard', employee.id]);
     }

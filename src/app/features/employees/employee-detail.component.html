@@ -1,0 +1,302 @@
+<div class="p-6 max-w-7xl mx-auto space-y-6">
+    <!-- Header/Breadcrumb -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <button (click)="goBack()"
+                class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400">
+                <i class="pi pi-arrow-left"></i>
+            </button>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Employee Profile</h1>
+                <p class="text-sm text-slate-500 font-medium">Manage and view detailed information</p>
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <app-button label="Edit Profile" icon="pi pi-user-edit" (onClick)="onEdit()"></app-button>
+        </div>
+    </div>
+
+    @if (employee(); as emp) {
+    <!-- Profile Overview Card -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="lg:col-span-1">
+            <p-card styleClass="overflow-hidden">
+                <div class="flex flex-col items-center text-center p-4">
+                    <div class="relative group">
+                        <div
+                            class="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold shadow-xl border-4 border-white dark:border-slate-800">
+                            {{ getInitials(getDisplayName()) }}
+                        </div>
+                        <div class="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-white dark:border-slate-800 shadow-sm"
+                            title="Online"></div>
+                    </div>
+
+                    <h2 class="mt-4 text-xl font-bold text-slate-900 dark:text-white">{{ getDisplayName() }}</h2>
+                    <p class="text-slate-500 font-medium">{{ emp.employeeCode }}</p>
+
+                    <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold" [ngClass]="{
+                                'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': emp.employmentStatus === 'active',
+                                'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400': emp.employmentStatus !== 'active'
+                            }">
+                        <span class="w-2 h-2 rounded-full"
+                            [ngClass]="emp.employmentStatus === 'active' ? 'bg-green-500' : 'bg-amber-500'"></span>
+                        {{ emp.employmentStatus | uppercase }}
+                    </div>
+
+                    <div class="w-full mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-4">
+                        <div class="flex items-center gap-3 text-left">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                <i class="pi pi-envelope text-xs"></i>
+                            </div>
+                            <div class="truncate">
+                                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Email</p>
+                                <p class="text-sm font-semibold truncate">{{ emp.email }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 text-left">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                                <i class="pi pi-calendar text-xs"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Joined On</p>
+                                <p class="text-sm font-semibold">{{ emp.dateOfJoining | date:'mediumDate' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+
+        <!-- Detail Tabs Content -->
+        <div class="lg:col-span-3">
+            <p-card>
+                <p-tabs [value]="0">
+                    <p-tablist>
+                        <p-tab [value]="0">Overview</p-tab>
+                        <p-tab [value]="1">Work Details</p-tab>
+                        <p-tab [value]="2">Bank & Statutory</p-tab>
+                        <p-tab [value]="3">Documents</p-tab>
+                    </p-tablist>
+                    <p-tabpanels>
+                        <p-tabpanel [value]="0">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+                                <div class="space-y-6">
+                                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Personal
+                                        Information</h3>
+                                    <div class="grid grid-cols-1 gap-4">
+                                        <div
+                                            class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                            <p class="text-xs text-slate-500 font-medium">Full Name</p>
+                                            <p class="font-semibold text-slate-900 dark:text-white">{{
+                                                emp.personalDetails?.firstName }} {{ emp.personalDetails?.lastName }}
+                                            </p>
+                                        </div>
+                                        <div
+                                            class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                            <p class="text-xs text-slate-500 font-medium">Phone Number</p>
+                                            <p class="font-semibold text-slate-900 dark:text-white">{{
+                                                emp.personalDetails?.phone || 'N/A' }}</p>
+                                        </div>
+                                        <div
+                                            class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                            <p class="text-xs text-slate-500 font-medium">Date of Birth</p>
+                                            <p class="font-semibold text-slate-900 dark:text-white">{{
+                                                emp.personalDetails?.dateOfBirth ? (emp.personalDetails.dateOfBirth |
+                                                date:'mediumDate') : 'N/A' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-6">
+                                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Permanent
+                                        Address</h3>
+                                    <div
+                                        class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                        <p class="text-slate-900 dark:text-white leading-relaxed">
+                                            {{ emp.personalDetails?.permanentAddressLine1 }}<br>
+                                            {{ emp.personalDetails?.permanentAddressLine2 }}<br>
+                                            {{ emp.personalDetails?.permanentCity }}, {{
+                                            emp.personalDetails?.permanentState }}<br>
+                                            {{ emp.personalDetails?.permanentCountry }} - {{
+                                            emp.personalDetails?.permanentZipCode }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </p-tabpanel>
+
+                        <p-tabpanel [value]="1">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
+                                <div
+                                    class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs text-slate-500 font-medium">Department</p>
+                                    <p class="font-semibold text-slate-900 dark:text-white">{{ emp.department }}</p>
+                                </div>
+                                <div
+                                    class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs text-slate-500 font-medium">Team</p>
+                                    <p class="font-semibold text-slate-900 dark:text-white">{{ emp.team || 'None' }}</p>
+                                </div>
+                                <div
+                                    class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs text-slate-500 font-medium">Work Location</p>
+                                    <p class="font-semibold text-slate-900 dark:text-white">{{ emp.workLocation }}</p>
+                                </div>
+                                <div
+                                    class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs text-slate-500 font-medium">Designation</p>
+                                    <p class="font-semibold text-slate-900 dark:text-white">{{
+                                        emp.jobDetails?.designation || 'N/A' }}</p>
+                                </div>
+                                <div
+                                    class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs text-slate-500 font-medium">Employment Type</p>
+                                    <p class="font-semibold text-slate-900 dark:text-white">{{
+                                        emp.jobDetails?.employmentType || 'Full Time' }}</p>
+                                </div>
+                                <div
+                                    class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs text-slate-500 font-medium">Notice Period (Days)</p>
+                                    <p class="font-semibold text-slate-900 dark:text-white">{{
+                                        emp.jobDetails?.noticePeriod || '0' }}</p>
+                                </div>
+                            </div>
+                        </p-tabpanel>
+
+                        <p-tabpanel [value]="2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
+                                <div class="space-y-4">
+                                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Bank Details
+                                    </h3>
+                                    <div
+                                        class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                                        <div class="py-2 flex justify-between">
+                                            <span class="text-slate-500 text-sm">Account Holder</span>
+                                            <span class="font-semibold dark:text-white">{{
+                                                emp.bankDetails?.accountHolderName || 'N/A' }}</span>
+                                        </div>
+                                        <div class="py-2 flex justify-between">
+                                            <span class="text-slate-500 text-sm">Bank Name</span>
+                                            <span class="font-semibold dark:text-white">{{ emp.bankDetails?.bankName ||
+                                                'N/A' }}</span>
+                                        </div>
+                                        <div class="py-2 flex justify-between">
+                                            <span class="text-slate-500 text-sm">Account No.</span>
+                                            <span class="font-semibold dark:text-white">{{
+                                                emp.bankDetails?.accountNumber || 'N/A' }}</span>
+                                        </div>
+                                        <div class="py-2 flex justify-between">
+                                            <span class="text-slate-500 text-sm">IFSC Code</span>
+                                            <span class="font-semibold dark:text-white">{{ emp.bankDetails?.ifscCode ||
+                                                'N/A' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Statutory
+                                        Details</h3>
+                                    <div
+                                        class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                                        <div class="py-2 flex justify-between">
+                                            <span class="text-slate-500 text-sm">PAN Card</span>
+                                            <span class="font-semibold dark:text-white italic">{{
+                                                emp.statutoryDetails?.pan || 'N/A' }}</span>
+                                        </div>
+                                        <div class="py-2 flex justify-between">
+                                            <span class="text-slate-500 text-sm">UAN Number</span>
+                                            <span class="font-semibold dark:text-white">{{
+                                                emp.statutoryDetails?.uan || 'N/A' }}</span>
+                                        </div>
+                                        <div class="py-2 flex justify-between">
+                                            <span class="text-slate-500 text-sm">PF</span>
+                                            <span class="font-semibold dark:text-white">{{
+                                                emp.statutoryDetails?.pfApplicable || 'N/A' }}</span>
+                                        </div>
+                                        <div class="py-2 flex justify-between">
+                                            <span class="text-slate-500 text-sm">ESI Number</span>
+                                            <span class="font-semibold dark:text-white">{{
+                                                emp.statutoryDetails?.esiNumber || 'N/A' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </p-tabpanel>
+
+                        <p-tabpanel [value]="3">
+                            @if (emp.documents && emp.documents.length > 0) {
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+                                @for (doc of emp.documents; track doc.id) {
+                                <div
+                                    class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 group hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all">
+                                    <div class="flex items-center gap-4 overflow-hidden">
+                                        <div
+                                            class="w-12 h-12 flex-shrink-0 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                                            <i [class]="'pi ' + getDocumentIcon(doc.type) + ' text-xl'"></i>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <h4 class="font-bold text-slate-800 dark:text-slate-200 text-sm truncate"
+                                                [title]="doc.originalName || 'Document'">
+                                                {{ doc.originalName || (doc.type | titlecase) }}
+                                            </h4>
+                                            <p
+                                                class="text-[10px] text-slate-500 font-medium uppercase tracking-tighter">
+                                                {{ doc.type || 'Other' }} • {{ formatBytes(doc.fileSize) }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <a [href]="doc.fileUrl" target="_blank"
+                                            class="w-8 h-8 flex items-center justify-center rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm transition-all">
+                                            <i class="pi pi-download text-xs"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                }
+
+                                <!-- Quick Upload Tile -->
+                                <label
+                                    class="flex flex-col items-center justify-center p-4 bg-slate-50/50 dark:bg-slate-800/20 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-all group">
+                                    <i
+                                        class="pi pi-plus text-slate-400 group-hover:text-indigo-500 transition-colors"></i>
+                                    <span class="text-xs font-bold text-slate-500 mt-2">Add New</span>
+                                    <input type="file" class="hidden" (change)="onFileUpload($event)">
+                                </label>
+                            </div>
+                            } @else {
+                            <div
+                                class="flex flex-col items-center justify-center py-12 text-center bg-slate-50 dark:bg-slate-800/20 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+                                <div
+                                    class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-4">
+                                    <i class="pi pi-file-o text-2xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold">No documents uploaded</h3>
+                                <p class="text-slate-500 max-w-xs mx-auto">Upload important documents like PAN card,
+                                    Aadhar, and Certificates here.</p>
+                                <label
+                                    class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-colors cursor-pointer">
+                                    Upload Document
+                                    <input type="file" class="hidden" (change)="onFileUpload($event)">
+                                </label>
+                            </div>
+                            }
+                        </p-tabpanel>
+                    </p-tabpanels>
+                </p-tabs>
+            </p-card>
+        </div>
+    </div>
+    } @else if (loading()) {
+    <div class="flex flex-col items-center justify-center py-24 text-center">
+        <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-slate-500 font-medium">Fetching employee details...</p>
+    </div>
+    } @else {
+    <div class="flex flex-col items-center justify-center py-24 text-center">
+        <i class="pi pi-exclamation-circle text-4xl text-amber-500 mb-4"></i>
+        <h3 class="text-xl font-bold">Employee Not Found</h3>
+        <p class="text-slate-500">We couldn't locate the employee details you're looking for.</p>
+        <app-button label="Back to List" (onClick)="goBack()" class="mt-4"></app-button>
+    </div>
+    }
+</div>

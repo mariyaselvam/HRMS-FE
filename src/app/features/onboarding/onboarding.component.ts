@@ -11,7 +11,17 @@ import { CommonInputComponent } from '../../shared/components/common-input.compo
 import { CommonSelectComponent } from '../../shared/components/common-select.component';
 import { CommonDatepickerComponent } from '../../shared/components/common-datepicker.component';
 import { LocationStore } from '../../store/location.store';
-import { GENDER_OPTIONS, MARITAL_OPTIONS, EMP_TYPE_OPTIONS, WORK_MODE_OPTIONS, TAX_OPTIONS, ROLE_OPTIONS, STATUS_OPTIONS, PT_STATE_OPTIONS } from './onboarding.constants';
+import { TeamStore } from '../../store/team.store';
+import {
+  GENDER_OPTIONS,
+  MARITAL_OPTIONS,
+  EMP_TYPE_OPTIONS,
+  WORK_MODE_OPTIONS,
+  TAX_OPTIONS,
+  ROLE_OPTIONS,
+  STATUS_OPTIONS,
+  PT_STATE_OPTIONS,
+} from './onboarding.constants';
 
 @Component({
   selector: 'app-onboarding',
@@ -24,15 +34,16 @@ import { GENDER_OPTIONS, MARITAL_OPTIONS, EMP_TYPE_OPTIONS, WORK_MODE_OPTIONS, T
     CardModule,
     CommonInputComponent,
     CommonSelectComponent,
-    CommonDatepickerComponent
+    CommonDatepickerComponent,
   ],
-  templateUrl: './onboarding.component.html'
+  templateUrl: './onboarding.component.html',
 })
 export class OnboardingComponent implements OnInit {
   private fb = inject(FormBuilder);
   protected store = inject(EmployeeStore);
   protected deptStore = inject(DepartmentStore);
   protected locationStore = inject(LocationStore);
+  protected teamStore = inject(TeamStore);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -40,7 +51,7 @@ export class OnboardingComponent implements OnInit {
   employeeId = signal<string | null>(null);
 
   // Document Upload State
-  uploadedFiles = signal<{ file: File, type: string, previewUrl?: string }[]>([]);
+  uploadedFiles = signal<{ file: File; type: string; previewUrl?: string }[]>([]);
 
   onStepChange(step: number | undefined) {
     if (step !== undefined) {
@@ -54,11 +65,12 @@ export class OnboardingComponent implements OnInit {
     password: ['', [Validators.required, Validators.minLength(8)]],
     employeeCode: ['', [Validators.required]],
     departmentId: [null, [Validators.required]],
+    teamId: [null, [Validators.required]],
     workLocationId: [null, [Validators.required]],
     dateOfJoining: [new Date(), [Validators.required]],
     role: ['employee', [Validators.required]],
     status: ['probation', [Validators.required]],
-    managerId: [null]
+    managerId: [null],
   });
 
   step2Form: FormGroup = this.fb.group({
@@ -69,7 +81,7 @@ export class OnboardingComponent implements OnInit {
     dob: [null],
     maritalStatus: ['Single'],
     currentAddress: [''],
-    permAddress: ['']
+    permAddress: [''],
   });
 
   step3Form: FormGroup = this.fb.group({
@@ -77,14 +89,14 @@ export class OnboardingComponent implements OnInit {
     employmentType: ['Full-time'],
     workLocationType: ['Office'],
     probationPeriod: [6],
-    noticePeriod: [90]
+    noticePeriod: [90],
   });
 
   step4Form: FormGroup = this.fb.group({
     accountNumber: ['', [Validators.pattern(/^\d{9,18}$/)]],
     ifscCode: ['', [Validators.pattern(/^[A-Z]{4}0[A-Z0-9]{6}$/)]],
     bankName: [''],
-    branchName: ['']
+    branchName: [''],
   });
 
   step5Form: FormGroup = this.fb.group({
@@ -100,17 +112,19 @@ export class OnboardingComponent implements OnInit {
     pfApplicable: [false],
     esiApplicable: [false],
     ptState: ['TN'],
-    taxRegime: ['new']
+    taxRegime: ['new'],
   });
 
   // Options
   deptOptions = computed(() =>
-    this.deptStore.departments().map(d => ({ label: d.name, value: d.id }))
+    this.deptStore.departments().map((d) => ({ label: d.name, value: d.id })),
   );
 
   locationOptions = computed(() =>
-    this.locationStore.locations().map(l => ({ label: l.name, value: l.id }))
+    this.locationStore.locations().map((l) => ({ label: l.name, value: l.id })),
   );
+
+  teamOptions = computed(() => this.teamStore.teams().map((t) => ({ label: t.name, value: t.id })));
 
   genderOptions = GENDER_OPTIONS;
   maritalOptions = MARITAL_OPTIONS;
@@ -122,29 +136,33 @@ export class OnboardingComponent implements OnInit {
   ptStateOptions = PT_STATE_OPTIONS;
 
   employeeOptions = computed(() =>
-    this.store.employees().map(e => ({ label: e.email, value: e.id }))
+    this.store.employees().map((e) => ({ label: e.email, value: e.id })),
   );
 
   ngOnInit() {
     this.deptStore.loadDepartments();
     this.locationStore.loadLocations();
+    this.teamStore.loadTeams();
     this.store.loadEmployees();
 
     // Watch CTC to auto-calculate breakdown
-    this.step5Form.get('ctc')?.valueChanges.subscribe(ctc => {
+    this.step5Form.get('ctc')?.valueChanges.subscribe((ctc) => {
       if (ctc > 0 && this.step5Form.get('basicSalary')?.pristine) {
-        const basic = Math.round(ctc * 0.5 / 12); // 50% of CTC monthly
+        const basic = Math.round((ctc * 0.5) / 12); // 50% of CTC monthly
         const hra = Math.round(basic * 0.4); // 40% of Basic
-        this.step5Form.patchValue({
-          basicSalary: basic,
-          hra: hra,
-          otherAllowances: Math.round((ctc / 12) - basic - hra)
-        }, { emitEvent: false });
+        this.step5Form.patchValue(
+          {
+            basicSalary: basic,
+            hra: hra,
+            otherAllowances: Math.round(ctc / 12 - basic - hra),
+          },
+          { emitEvent: false },
+        );
       }
     });
 
     // Check if resuming from ID
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       if (params['id']) {
         const id = params['id'];
         this.employeeId.set(id);
@@ -154,24 +172,25 @@ export class OnboardingComponent implements OnInit {
   }
 
   fetchEmployeeData(id: string) {
-    this.store.getEmployee(id).subscribe(emp => {
+    this.store.getEmployee(id).subscribe((emp) => {
       // 1. Pre-fill Step 1 (Core)
       this.step1Form.patchValue({
         email: emp.email,
         employeeCode: emp.employeeCode,
         departmentId: emp.departmentId,
+        teamId: emp.teamId,
         workLocationId: emp.workLocationId,
         dateOfJoining: emp.dateOfJoining ? new Date(emp.dateOfJoining) : new Date(),
         role: emp.role || 'employee',
         status: emp.employmentStatus || 'probation',
-        managerId: emp.managerId || null
+        managerId: emp.managerId || null,
       });
 
       // 2. Pre-fill Step 2 (Personal)
       if (emp.personalDetails) {
         this.step2Form.patchValue({
           ...emp.personalDetails,
-          dob: emp.personalDetails.dob ? new Date(emp.personalDetails.dob) : null
+          dob: emp.personalDetails.dob ? new Date(emp.personalDetails.dob) : null,
         });
       }
 
@@ -194,12 +213,12 @@ export class OnboardingComponent implements OnInit {
           pfApplicable: emp.statutoryDetails.pfApplicable,
           esiApplicable: emp.statutoryDetails.esiApplicable,
           ptState: emp.statutoryDetails.ptState,
-          taxRegime: emp.statutoryDetails.taxRegime
+          taxRegime: emp.statutoryDetails.taxRegime,
         });
       }
 
       // Load most recent salary structure
-      this.store.loadSalaryStructure(id).subscribe(salary => {
+      this.store.loadSalaryStructure(id).subscribe((salary) => {
         if (salary) {
           this.step5Form.patchValue({
             basicSalary: Number(salary.basicSalary),
@@ -207,7 +226,7 @@ export class OnboardingComponent implements OnInit {
             transportAllowance: Number(salary.transportAllowance),
             otherAllowances: Number(salary.otherAllowances),
             effectiveFrom: new Date(salary.effectiveFrom),
-            ctc: (Number(salary.grossSalary) * 12) // Simplified approximation
+            ctc: Number(salary.grossSalary) * 12, // Simplified approximation
           });
         }
       });
@@ -223,7 +242,8 @@ export class OnboardingComponent implements OnInit {
       if (control.errors?.['required']) return 'Required';
       if (control.errors?.['email']) return 'Invalid email';
       if (control.errors?.['pattern']) return 'Invalid format';
-      if (control.errors?.['minlength']) return `Min ${control.errors['minlength'].requiredLength} chars`;
+      if (control.errors?.['minlength'])
+        return `Min ${control.errors['minlength'].requiredLength} chars`;
       if (control.errors?.['min']) return `Value must be at least ${control.errors['min'].min}`;
     }
     return null;
@@ -240,7 +260,7 @@ export class OnboardingComponent implements OnInit {
         this.activeStep.set(2);
         if (typeof nextCallback === 'function') nextCallback();
       },
-      error: () => { }
+      error: () => {},
     });
   }
 
@@ -249,9 +269,12 @@ export class OnboardingComponent implements OnInit {
       this.step2Form.markAllAsTouched();
       return;
     }
-    this.store.savePersonalDetails(this.employeeId()!, this.step2Form.value);
-    this.activeStep.set(3);
-    if (typeof nextCallback === 'function') nextCallback();
+    this.store.savePersonalDetails(this.employeeId()!, this.step2Form.value).subscribe({
+      next: () => {
+        this.activeStep.set(3);
+        if (typeof nextCallback === 'function') nextCallback();
+      },
+    });
   }
 
   handleStep3(nextCallback: any) {
@@ -259,9 +282,12 @@ export class OnboardingComponent implements OnInit {
       this.step3Form.markAllAsTouched();
       return;
     }
-    this.store.saveJobDetails(this.employeeId()!, this.step3Form.value);
-    this.activeStep.set(4);
-    if (typeof nextCallback === 'function') nextCallback();
+    this.store.saveJobDetails(this.employeeId()!, this.step3Form.value).subscribe({
+      next: () => {
+        this.activeStep.set(4);
+        if (typeof nextCallback === 'function') nextCallback();
+      },
+    });
   }
 
   handleStep4(nextCallback: any) {
@@ -269,9 +295,12 @@ export class OnboardingComponent implements OnInit {
       this.step4Form.markAllAsTouched();
       return;
     }
-    this.store.saveBankDetails(this.employeeId()!, this.step4Form.value);
-    this.activeStep.set(5);
-    if (typeof nextCallback === 'function') nextCallback();
+    this.store.saveBankDetails(this.employeeId()!, this.step4Form.value).subscribe({
+      next: () => {
+        this.activeStep.set(5);
+        if (typeof nextCallback === 'function') nextCallback();
+      },
+    });
   }
 
   handleStep5(nextCallback: any) {
@@ -282,29 +311,36 @@ export class OnboardingComponent implements OnInit {
 
     const val = this.step5Form.value;
 
-    // Save Statutory Details
-    this.store.saveStatutoryDetails(this.employeeId()!, {
-      pan: val.pan,
-      uan: val.uan,
-      esiNumber: val.esiNumber,
-      pfApplicable: val.pfApplicable,
-      esiApplicable: val.esiApplicable,
-      ptState: val.ptState,
-      taxRegime: val.taxRegime
-    });
-
-    // Save Salary/Compensation
-    this.store.setupSalary({
-      employeeId: this.employeeId()!,
-      basicSalary: val.basicSalary,
-      hra: val.hra,
-      transportAllowance: val.transportAllowance,
-      otherAllowances: val.otherAllowances,
-      effectiveFrom: val.effectiveFrom
-    });
-
-    this.activeStep.set(6);
-    if (typeof nextCallback === 'function') nextCallback();
+    // We use forkJoin if we need to wait for both, or just sequential
+    this.store
+      .saveStatutoryDetails(this.employeeId()!, {
+        pan: val.pan,
+        uan: val.uan,
+        esiNumber: val.esiNumber,
+        pfApplicable: val.pfApplicable,
+        esiApplicable: val.esiApplicable,
+        ptState: val.ptState,
+        taxRegime: val.taxRegime,
+      })
+      .subscribe({
+        next: () => {
+          this.store
+            .setupSalary({
+              employeeId: this.employeeId()!,
+              basicSalary: val.basicSalary,
+              hra: val.hra,
+              transportAllowance: val.transportAllowance,
+              otherAllowances: val.otherAllowances,
+              effectiveFrom: val.effectiveFrom,
+            })
+            .subscribe({
+              next: () => {
+                this.activeStep.set(6);
+                if (typeof nextCallback === 'function') nextCallback();
+              },
+            });
+        },
+      });
   }
 
   // --- Step 6: Documents ---
@@ -314,36 +350,146 @@ export class OnboardingComponent implements OnInit {
       const file = element.files[0];
       const previewUrl = file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined;
 
-      this.uploadedFiles.update(files => {
-        const filtered = files.filter(f => f.type !== type);
+      this.uploadedFiles.update((files) => {
+        const filtered = files.filter((f) => f.type !== type);
         return [...filtered, { file, type, previewUrl }];
       });
     }
   }
 
   getFileForType(type: string) {
-    return this.uploadedFiles().find(f => f.type === type);
+    return this.uploadedFiles().find((f) => f.type === type);
   }
 
   removeFile(type: string) {
-    this.uploadedFiles.update(files => {
-      const target = files.find(f => f.type === type);
+    this.uploadedFiles.update((files) => {
+      const target = files.find((f) => f.type === type);
       if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
-      return files.filter(f => f.type !== type);
+      return files.filter((f) => f.type !== type);
     });
   }
 
   handleStep6() {
     if (this.uploadedFiles().length > 0) {
       const formData = new FormData();
-      this.uploadedFiles().forEach(f => {
+      this.uploadedFiles().forEach((f) => {
         formData.append('documents', f.file, f.file.name);
         formData.append('documentTypes', f.type);
       });
-      this.store.saveDocuments(this.employeeId()!, formData);
+      this.store.saveDocuments(this.employeeId()!, formData).subscribe({
+        next: () => {
+          this.store.finalizeOnboarding(this.employeeId()!).subscribe({
+            next: () => this.router.navigate(['/employees']),
+          });
+        },
+      });
+    } else {
+      this.store.finalizeOnboarding(this.employeeId()!).subscribe({
+        next: () => this.router.navigate(['/employees']),
+      });
     }
+  }
 
-    this.store.finalizeOnboarding(this.employeeId()!);
-    this.router.navigate(['/employees']);
+  fillDummyData() {
+    const randomId = Math.floor(1000 + Math.random() * 9000);
+    const firstNames = [
+      'Arun',
+      'Priya',
+      'Sanjay',
+      'Deepika',
+      'Karthik',
+      'Anjali',
+      'Vikram',
+      'Meera',
+    ];
+    const lastNames = ['Kumar', 'Sharma', 'Patel', 'Reddy', 'Singh', 'Nair', 'Verma', 'Iyer'];
+    const cities = ['Chennai', 'Bangalore', 'Mumbai', 'Hyderabad', 'Pune', 'Delhi'];
+
+    const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    const randomCity = cities[Math.floor(Math.random() * cities.length)];
+
+    if (this.activeStep() === 1) {
+      this.step1Form.patchValue({
+        email: `${randomFirstName.toLowerCase()}.${randomLastName.toLowerCase()}${randomId}@hrms.com`,
+        password: 'Password123!',
+        employeeCode: `EMP-${randomId}`,
+        departmentId:
+          this.deptOptions()[Math.floor(Math.random() * this.deptOptions().length)]?.value,
+        teamId: this.teamOptions()[Math.floor(Math.random() * this.teamOptions().length)]?.value,
+        workLocationId:
+          this.locationOptions()[Math.floor(Math.random() * this.locationOptions().length)]?.value,
+        dateOfJoining: new Date(),
+        role: ROLE_OPTIONS[Math.floor(Math.random() * ROLE_OPTIONS.length)].value,
+        status: STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)].value,
+        managerId: this.employeeOptions().length > 0 ? this.employeeOptions()[0].value : null,
+      });
+    } else if (this.activeStep() === 2) {
+      this.step2Form.patchValue({
+        firstName: randomFirstName,
+        lastName: randomLastName,
+        mobile: '9' + Math.floor(100000000 + Math.random() * 900000000).toString(),
+        gender: GENDER_OPTIONS[Math.floor(Math.random() * GENDER_OPTIONS.length)].value,
+        dob: new Date(
+          1990 + Math.floor(Math.random() * 15),
+          Math.floor(Math.random() * 12),
+          Math.floor(Math.random() * 28),
+        ),
+        maritalStatus: MARITAL_OPTIONS[Math.floor(Math.random() * MARITAL_OPTIONS.length)].value,
+        currentAddress: `${randomId}, MG Road, ${randomCity}`,
+        permAddress: `Same as above`,
+      });
+    } else if (this.activeStep() === 3) {
+      const designations = [
+        'Senior Software Engineer',
+        'Product Manager',
+        'HR Specialist',
+        'UI/UX Designer',
+        'Accountant',
+      ];
+      this.step3Form.patchValue({
+        designation: designations[Math.floor(Math.random() * designations.length)],
+        employmentType: EMP_TYPE_OPTIONS[Math.floor(Math.random() * EMP_TYPE_OPTIONS.length)].value,
+        workLocationType:
+          WORK_MODE_OPTIONS[Math.floor(Math.random() * WORK_MODE_OPTIONS.length)].value,
+        probationPeriod: 6,
+        noticePeriod: 90,
+      });
+    } else if (this.activeStep() === 4) {
+      const banks = ['HDFC Bank', 'ICICI Bank', 'Axis Bank', 'SBI'];
+      this.step4Form.patchValue({
+        accountNumber: Math.floor(100000000000 + Math.random() * 900000000000).toString(),
+        ifscCode: 'BANK000' + Math.floor(1000 + Math.random() * 9000).toString(),
+        bankName: banks[Math.floor(Math.random() * banks.length)],
+        branchName: randomCity + ' Main Branch',
+      });
+    } else if (this.activeStep() === 5) {
+      const ctc = (Math.floor(Math.random() * 10) + 5) * 100000;
+      this.step5Form.patchValue({
+        ctc: ctc,
+        basicSalary: Math.round((ctc * 0.4) / 12),
+        hra: Math.round((ctc * 0.2) / 12),
+        transportAllowance: 2000,
+        otherAllowances: Math.round((ctc * 0.4) / 12) - 2000,
+        effectiveFrom: new Date(),
+        pan: 'ABCDE' + Math.floor(1000 + Math.random() * 9000).toString() + 'F',
+        uan: '100' + Math.floor(100000000 + Math.random() * 900000000).toString(),
+        esiNumber: '31' + Math.floor(1000000000 + Math.random() * 9000000000).toString(),
+        pfApplicable: true,
+        esiApplicable: false,
+        ptState: PT_STATE_OPTIONS[Math.floor(Math.random() * PT_STATE_OPTIONS.length)].value,
+        taxRegime: TAX_OPTIONS[Math.floor(Math.random() * TAX_OPTIONS.length)].value,
+      });
+    } else if (this.activeStep() === 6) {
+      // Magic fill for Step 6: Fake a File Upload
+      const dummyContent = 'This is a dummy document for development testing purposes.';
+      const blob = new Blob([dummyContent], { type: 'text/plain' });
+      const mockFile = new File([blob], `dummy_id_proof_${randomId}.txt`, { type: 'text/plain' });
+
+      this.uploadedFiles.update((files) => [
+        ...files.filter((f) => f.type !== 'id_proof'),
+        { file: mockFile, type: 'id_proof' },
+      ]);
+    }
   }
 }

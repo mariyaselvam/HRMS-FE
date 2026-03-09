@@ -4,7 +4,7 @@
 
     @if (icon()) {
     <p-iconfield [iconPosition]="iconPosition()">
-        <p-inputicon [class]="icon()!" />
+        <p-inputicon><i [class]="icon()!"></i></p-inputicon>
         <input pInputText [id]="id()" [type]="type()" [placeholder]="placeholder()" class="form-input w-full !pl-10"
             [class.input-error]="error()" [disabled]="disabled()" [(ngModel)]="value"
             (ngModelChange)="onValueChange($event)" (blur)="onBlur()" />

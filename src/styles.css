@@ -12,6 +12,10 @@
         -webkit-font-smoothing: antialiased;
     }
 
+    header {
+        height: 81px !important;
+    }
+
     .dark body {
         @apply bg-slate-950 text-slate-100;
     }
@@ -154,10 +158,6 @@
         @apply !flex !items-center !relative w-full;
     }
 
-    .p-inputicon {
-        @apply !absolute !left-3 !top-1/2 !-translate-y-1/2 !text-slate-500 !z-10 !pointer-events-none !text-base;
-    }
-
     .dark .p-inputicon {
         @apply !text-slate-400;
     }
@@ -170,9 +170,12 @@
 
     /* Improved Input Colors & STRICT UNIFORM HEIGHT */
     .p-inputtext,
-    .p-select,
     .p-datepicker-input {
-        @apply !bg-slate-100/50 !border-slate-300 !text-slate-800 !h-[44px] !transition-all !shadow-sm;
+        @apply !bg-slate-100/50 !border-slate-200 !text-slate-800 !h-[44px] !transition-all !shadow-sm;
+    }
+
+    .p-select {
+        @apply !bg-white !border-slate-200 !text-slate-800 !h-[44px] !transition-all !shadow-sm;
     }
 
     .p-inputtext:hover,
@@ -201,7 +204,21 @@
 
     /* Ensure internal alignment for Select */
     .p-select-label {
-        @apply !py-0 !px-4 !flex !items-center !h-full !text-sm !font-medium;
+        @apply !py-0 !px-4 !flex !items-center !h-full !text-sm !font-medium !bg-transparent !text-slate-800;
+    }
+
+    /* Select placeholder text */
+    .p-select-label.p-placeholder {
+        @apply !text-slate-400 !opacity-100;
+    }
+
+    /* Dark mode select text */
+    .dark .p-select-label {
+        @apply !text-slate-200;
+    }
+
+    .dark .p-select-label.p-placeholder {
+        @apply !text-slate-500 !opacity-100;
     }
 
     /* Ensure consistent text padding and placeholder style */
@@ -215,12 +232,6 @@
         @apply !text-slate-400 !opacity-100;
     }
 
-    /* Specific adjustment for grouped icons */
-    .p-iconfield .p-inputicon {
-        @apply !text-lg;
-        /* Slightly larger icon for better visual weight */
-    }
-
     .p-datepicker .p-datepicker-trigger {
         @apply !text-slate-400 !w-10 !flex !items-center !justify-center;
     }
@@ -229,15 +240,12 @@
     /* Datepicker & Popover Overlays */
     .p-popover {
         @apply !z-[1000] !shadow-2xl;
-    }
-
-    .p-datepicker,
-    .p-select-overlay {
-        @apply !z-[1100] !shadow-2xl;
+        --p-popover-content-padding: 0px;
     }
 
     .p-popover-content {
-        @apply !p-0;
+        padding: 0 !important;
+        background: transparent !important;
     }
 
     .dark .p-datatable {
@@ -318,5 +326,28 @@
 
     .dark .border-slate-200 {
         @apply !border-slate-800;
+    }
+
+    /* Tabs Dark Mode Fix */
+    .dark .p-tabs,
+    .dark .p-tablist,
+    .dark .p-tabpanels {
+        @apply !bg-transparent !text-slate-100 !border-slate-800;
+    }
+
+    .dark .p-tablist-tab-list {
+        @apply !bg-transparent;
+    }
+
+    .dark .p-tab {
+        @apply !bg-transparent !text-slate-400 transition-colors;
+    }
+
+    .dark .p-tab:hover {
+        @apply !bg-slate-800/50;
+    }
+
+    .dark .p-tab.p-tab-active {
+        @apply !text-indigo-400 !bg-transparent;
     }
 }

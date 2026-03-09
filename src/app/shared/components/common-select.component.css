@@ -4,19 +4,20 @@
 }
 
 :host ::ng-deep .form-select.p-select {
-    @apply w-full rounded-xl border-[1.5px] border-slate-200 bg-white text-slate-800 text-sm transition-all duration-200;
+    @apply w-full rounded-xl border-[1.5px] border-slate-200 !bg-white text-slate-800 text-sm transition-all duration-200;
 }
 
-.dark :host ::ng-deep .form-select.p-select {
-    @apply border-slate-700 bg-slate-900 text-slate-100;
+/* ✅ Correct dark mode detection inside Angular component */
+:host-context(.dark) ::ng-deep .form-select.p-select {
+    @apply !bg-slate-900 !border-slate-700 !text-slate-100;
 }
 
 :host ::ng-deep .form-select:hover {
     @apply border-slate-400;
 }
 
-.dark :host ::ng-deep .form-select:hover {
-    @apply border-slate-600;
+:host-context(.dark) ::ng-deep .form-select:hover {
+    @apply !border-slate-600;
 }
 
 :host ::ng-deep .form-select.p-focus,

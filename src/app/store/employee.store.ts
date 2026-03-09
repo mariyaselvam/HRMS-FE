@@ -64,11 +64,23 @@ export class EmployeeStore {
 
     getEmployee(id: string) {
         this.setLoading(true);
-        return this.http.get<ApiResponse<EmployeeApiResponse>>(`${API_ENDPOINTS.EMPLOYEES}/${id}`)
+        return this.http.get<any>(`${API_ENDPOINTS.EMPLOYEES}/${id}`)
             .pipe(
-                map(res => mapEmployeeResponse(res.data)),
+                map(res => {
+                    // Handle both wrapped { data: ... } and direct responses
+                    const raw = res.data || res;
+                    return mapEmployeeResponse(raw);
+                }),
                 finalize(() => this.setLoading(false))
             );
+    }
+
+    loadEmployeeById(id: string) {
+        this.state.update(s => ({ ...s, selectedEmployee: null }));
+        this.getEmployee(id).subscribe({
+            next: (emp) => this.state.update(s => ({ ...s, selectedEmployee: emp })),
+            error: (err) => this.handleError('Failed to load employee details', err)
+        });
     }
 
     onboardEmployee(payload: any) {
@@ -82,75 +94,87 @@ export class EmployeeStore {
 
     savePersonalDetails(id: string, payload: any) {
         this.setLoading(true);
-        this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_PERSONAL(id), payload)
-            .pipe(finalize(() => this.setLoading(false)))
-            .subscribe({
-                next: () => this.notify.success('Personal Details Saved', 'Information updated successfully.'),
-                error: (err) => this.handleError('Failed to save personal details', err)
-            });
+        return this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_PERSONAL(id), payload)
+            .pipe(
+                finalize(() => this.setLoading(false)),
+                map(res => {
+                    this.notify.success('Personal Details Saved', 'Information updated successfully.');
+                    return res;
+                })
+            );
     }
 
     saveJobDetails(id: string, payload: any) {
         this.setLoading(true);
-        this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_JOB(id), payload)
-            .pipe(finalize(() => this.setLoading(false)))
-            .subscribe({
-                next: () => this.notify.success('Job Details Saved', 'Information updated successfully.'),
-                error: (err) => this.handleError('Failed to save job details', err)
-            });
+        return this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_JOB(id), payload)
+            .pipe(
+                finalize(() => this.setLoading(false)),
+                map(res => {
+                    this.notify.success('Job Details Saved', 'Information updated successfully.');
+                    return res;
+                })
+            );
     }
 
     saveBankDetails(id: string, payload: any) {
         this.setLoading(true);
-        this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_BANK(id), payload)
-            .pipe(finalize(() => this.setLoading(false)))
-            .subscribe({
-                next: () => this.notify.success('Bank Details Saved', 'Information updated successfully.'),
-                error: (err) => this.handleError('Failed to save bank details', err)
-            });
+        return this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_BANK(id), payload)
+            .pipe(
+                finalize(() => this.setLoading(false)),
+                map(res => {
+                    this.notify.success('Bank Details Saved', 'Information updated successfully.');
+                    return res;
+                })
+            );
     }
 
     saveStatutoryDetails(id: string, payload: any) {
         this.setLoading(true);
-        this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_STATUTORY(id), payload)
-            .pipe(finalize(() => this.setLoading(false)))
-            .subscribe({
-                next: () => this.notify.success('Statutory Details Saved', 'Information updated successfully.'),
-                error: (err) => this.handleError('Failed to save statutory details', err)
-            });
+        return this.http.patch<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_STATUTORY(id), payload)
+            .pipe(
+                finalize(() => this.setLoading(false)),
+                map(res => {
+                    this.notify.success('Statutory Details Saved', 'Information updated successfully.');
+                    return res;
+                })
+            );
     }
 
     saveDocuments(id: string, formData: FormData) {
         this.setLoading(true);
-        this.http.post<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_DOCUMENTS(id), formData)
-            .pipe(finalize(() => this.setLoading(false)))
-            .subscribe({
-                next: () => this.notify.success('Documents Uploaded', 'Files have been saved securely.'),
-                error: (err) => this.handleError('Failed to upload documents', err)
-            });
+        return this.http.post<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_DOCUMENTS(id), formData)
+            .pipe(
+                finalize(() => this.setLoading(false)),
+                map(res => {
+                    this.notify.success('Documents Uploaded', 'Files have been saved securely.');
+                    return res;
+                })
+            );
     }
 
     finalizeOnboarding(id: string) {
         this.setLoading(true);
-        this.http.post<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_FINALIZE(id), {})
-            .pipe(finalize(() => this.setLoading(false)))
-            .subscribe({
-                next: () => {
+        return this.http.post<ApiResponse<any>>((API_ENDPOINTS as any).EMPLOYEE_FINALIZE(id), {})
+            .pipe(
+                finalize(() => this.setLoading(false)),
+                map(res => {
                     this.notify.success('Onboarding Finalized', 'Employee is now active.');
-                    this.loadEmployees();
-                },
-                error: (err) => this.handleError('Finalization Failed', err)
-            });
+                    this.loadEmployees(true);
+                    return res;
+                })
+            );
     }
 
     setupSalary(payload: SalarySetupPayload) {
         this.setLoading(true);
-        this.http.post<ApiResponse<any>>(API_ENDPOINTS.SALARY_SETUP, payload)
-            .pipe(finalize(() => this.setLoading(false)))
-            .subscribe({
-                next: () => this.notify.success('Salary Setup', 'Salary structure has been configured.'),
-                error: (err) => this.handleError('Salary Setup Failed', err)
-            });
+        return this.http.post<ApiResponse<any>>(API_ENDPOINTS.SALARY_SETUP, payload)
+            .pipe(
+                finalize(() => this.setLoading(false)),
+                map(res => {
+                    this.notify.success('Salary Setup', 'Salary structure has been configured.');
+                    return res;
+                })
+            );
     }
 
     loadSalaryStructure(employeeId: string) {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, signal, effect, computed } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, effect, computed, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AttendanceStore } from '../../store/attendance.store';
 import { AuthService } from '../../core/services/auth.service';
@@ -10,13 +10,7 @@ import { CommonSelectComponent } from '../../shared/components/common-select.com
 import { CommonDatepickerComponent } from '../../shared/components/common-datepicker.component';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
-import { DatePickerModule } from 'primeng/datepicker';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
 import { PopoverModule } from 'primeng/popover';
-import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -24,22 +18,16 @@ import { ButtonModule } from 'primeng/button';
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
+        CardModule,
+        PopoverModule,
+        ButtonModule,
         CommonTableComponent,
         CommonButtonComponent,
         CommonInputComponent,
         CommonSelectComponent,
         CommonDatepickerComponent,
-        CardModule,
-        FormsModule,
         ShiftManagementComponent,
-        InputTextModule,
-        SelectModule,
-        DatePickerModule,
-        IconFieldModule,
-        InputIconModule,
-        PopoverModule,
-        BadgeModule,
-        ButtonModule
     ],
     templateUrl: './attendance.component.html'
 })
@@ -90,11 +78,29 @@ export class AttendanceComponent implements OnInit, OnDestroy {
     currentTime = new Date();
     private timer: any;
 
+    private getFilters(page?: number) {
+        const dates = this.dateRange();
+        return {
+            search: this.search() || undefined,
+            status: (this.status() as any) || undefined,
+            startDate: dates?.[0]?.toISOString().split('T')[0],
+            endDate: dates?.[1]?.toISOString().split('T')[0],
+            page: page ?? untracked(() => this.store.page()),
+            limit: untracked(() => this.store.limit())
+        };
+    }
+
     constructor() {
         // Automatically reload logs when switching views or filters change
         effect(() => {
+            // Register dependencies
             const currentView = this.view();
-            const filters = this.getFilters();
+            this.search();
+            this.status();
+            this.dateRange();
+
+            // When filters change, always load from page 1
+            const filters = untracked(() => this.getFilters(1));
 
             if (currentView === 'logs') {
                 this.store.loadLogs(filters);
@@ -102,18 +108,6 @@ export class AttendanceComponent implements OnInit, OnDestroy {
                 this.store.loadAdminLogs(filters);
             }
         });
-    }
-
-    private getFilters() {
-        const dates = this.dateRange();
-        return {
-            search: this.search() || undefined,
-            status: (this.status() as any) || undefined,
-            startDate: dates?.[0]?.toISOString().split('T')[0],
-            endDate: dates?.[1]?.toISOString().split('T')[0],
-            page: this.store.page(),
-            limit: this.store.limit()
-        };
     }
 
     // ─── Table columns matching backend response fields ──────────────────────
@@ -143,6 +137,11 @@ export class AttendanceComponent implements OnInit, OnDestroy {
         const page = (event.first / event.rows) + 1;
         const limit = event.rows;
 
+        // Skip duplicate call if already loading or if page/limit already match
+        if (this.store.loading() || (this.store.page() === page && this.store.limit() === limit && this.store.logs().length > 0)) {
+            return;
+        }
+
         const filters = {
             ...this.getFilters(),
             page,
@@ -151,7 +150,7 @@ export class AttendanceComponent implements OnInit, OnDestroy {
 
         if (this.view() === 'logs') {
             this.store.loadLogs(filters);
-        } else {
+        } else if (this.view() === 'all-logs') {
             this.store.loadAdminLogs(filters);
         }
     }

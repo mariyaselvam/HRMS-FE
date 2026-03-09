@@ -1,7 +1,11 @@
 <div class="max-w-4xl mx-auto py-8 px-4">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-slate-900 border-none">Employee Onboarding</h1>
-        <p class="text-slate-500">Complete the recruitment journey for a new team member.</p>
+    <div class="mb-8 flex justify-between items-start">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900 border-none">Employee Onboarding</h1>
+            <p class="text-slate-500">Complete the recruitment journey for a new team member.</p>
+        </div>
+        <p-button label="Magic Fill" icon="pi pi-sparkles" severity="help" [outlined]="true"
+            (onClick)="fillDummyData()"></p-button>
     </div>
 
     <p-stepper [value]="activeStep()" (valueChange)="onStepChange($event)">
@@ -30,6 +34,9 @@
                             <app-common-select formControlName="departmentId" label="Department"
                                 [options]="deptOptions()"
                                 [error]="getErrorMessage(step1Form, 'departmentId')"></app-common-select>
+                            <app-common-select formControlName="teamId" label="Team"
+                                [options]="teamOptions()"
+                                [error]="getErrorMessage(step1Form, 'teamId')"></app-common-select>
                             <app-common-select formControlName="workLocationId" label="Work Location (Branch)"
                                 [options]="locationOptions()"
                                 [error]="getErrorMessage(step1Form, 'workLocationId')"></app-common-select>

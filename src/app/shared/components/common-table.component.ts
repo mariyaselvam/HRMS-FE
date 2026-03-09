@@ -23,12 +23,14 @@ export class CommonTableComponent {
     hasActions = input<boolean>(false);
     showEdit = input<boolean>(true);
     showDelete = input<boolean>(true);
+    showView = input<boolean>(false);
 
     // Lazy Loading properties
     lazy = input<boolean>(false);
     rows = input<number>(10);
     totalRecords = input<number>(0);
 
+    view = output<any>();
     edit = output<any>();
     delete = output<any>();
     onLazyLoad = output<any>();
