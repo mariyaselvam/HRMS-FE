@@ -7,7 +7,8 @@ import {
     CheckOutInput,
     CreateShiftInput,
     AttendanceLogFilters,
-    AssignShiftInput
+    AssignShiftInput,
+    mapAttendanceLog
 } from '../core/models/attendance.model';
 import { BaseHttpService } from '../core/services/base-http.service';
 import { API_ENDPOINTS } from '../core/constants/app.constants';
@@ -52,7 +53,11 @@ export class AttendanceStore {
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => {
-                    const { records, total } = res.data;
+                    const data = res.data as any;
+                    const rawRecords = (Array.isArray(data) ? data : data?.records) || [];
+                    const records = rawRecords.map(mapAttendanceLog);
+                    const total = (Array.isArray(data) ? data.length : data?.total) || 0;
+
                     this.state.update(s => ({
                         ...s,
                         logs: records,
@@ -64,7 +69,7 @@ export class AttendanceStore {
                     // Compare using local date to avoid UTC offset issues (e.g. IST +5:30)
                     const now = new Date();
                     const todayLocal = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-                    const todayLog = records.find(l => {
+                    const todayLog = records.find((l: AttendanceLog) => {
                         const logDate = l.attendanceDate ? l.attendanceDate.split('T')[0] : '';
                         return logDate === todayLocal;
                     });
@@ -83,7 +88,11 @@ export class AttendanceStore {
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => {
-                    const { records, total } = res.data;
+                    const data = res.data as any;
+                    const rawRecords = (Array.isArray(data) ? data : data?.records) || [];
+                    const records = rawRecords.map(mapAttendanceLog);
+                    const total = (Array.isArray(data) ? data.length : data?.total) || 0;
+
                     this.state.update(s => ({
                         ...s,
                         logs: records,
@@ -104,11 +113,12 @@ export class AttendanceStore {
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => {
-                    const checkInTime = new Date(res.data.checkIn!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const mapped = mapAttendanceLog(res.data);
+                    const checkInTime = new Date(mapped.checkIn!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     this.state.update(s => ({
                         ...s,
-                        todayStatus: res.data,
-                        logs: [res.data, ...s.logs]
+                        todayStatus: mapped,
+                        logs: [mapped, ...s.logs]
                     }));
                     this.notify.success('Check-In Successful', `Checked in at ${checkInTime}`);
                 },
@@ -124,15 +134,16 @@ export class AttendanceStore {
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => {
-                    const checkOutTime = new Date(res.data.checkOut!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const mapped = mapAttendanceLog(res.data);
+                    const checkOutTime = new Date(mapped.checkOut!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     this.state.update(s => ({
                         ...s,
-                        todayStatus: res.data,
-                        logs: s.logs.map(l => l.id === res.data.id ? res.data : l)
+                        todayStatus: mapped,
+                        logs: s.logs.map(l => l.id === mapped.id ? mapped : l)
                     }));
                     this.notify.success(
                         'Check-Out Successful',
-                        `Checked out at ${checkOutTime}. Total: ${res.data.totalHours ?? 0} hrs`
+                        `Checked out at ${checkOutTime}. Total: ${mapped.totalHours ?? 0} hrs`
                     );
                 },
                 error: (err) => this.handleError('Check-Out Failed', err)

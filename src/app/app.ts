@@ -28,10 +28,16 @@ export class App {
     title = 'hrms-fe';
     authService = inject(AuthService);
     themeService = inject(ThemeService);
-    sidebarVisible = signal(false);
+    sidebarVisible = signal(false); // Used across the app previously, let's keep it for mobile open state or rename.
+    isMobileOpen = signal(false);
+    isDesktopCollapsed = signal(false);
 
     toggleSidebar(): void {
-        this.sidebarVisible.update(v => !v);
+        if (window.innerWidth < 768) {
+            this.isMobileOpen.update(v => !v);
+        } else {
+            this.isDesktopCollapsed.update(v => !v);
+        }
     }
 
     onLogout(): void {

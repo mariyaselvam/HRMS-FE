@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
 
 export interface Column {
     field: string;
@@ -13,7 +15,7 @@ export interface Column {
 @Component({
     selector: 'app-common-table',
     standalone: true,
-    imports: [CommonModule, TableModule, ButtonModule, InputTextModule],
+    imports: [CommonModule, TableModule, ButtonModule, InputTextModule, MenuModule],
     templateUrl: './common-table.component.html',
     styleUrl: './common-table.component.css'
 })
@@ -35,9 +37,38 @@ export class CommonTableComponent {
     delete = output<any>();
     onLazyLoad = output<any>();
 
+    menuItems: MenuItem[] = [];
+
     resolveFieldValue(rowData: any, field: string): any {
         if (!field) return '';
         return field.split('.').reduce((acc, part) => acc && acc[part], rowData);
+    }
+
+    onActionClick(event: Event, rowData: any, menu: any) {
+        this.menuItems = [];
+        if (this.showView()) {
+            this.menuItems.push({
+                label: 'View',
+                icon: 'pi pi-eye',
+                command: () => this.view.emit(rowData)
+            });
+        }
+        if (this.showEdit()) {
+            this.menuItems.push({
+                label: 'Edit',
+                icon: 'pi pi-pencil',
+                command: () => this.edit.emit(rowData)
+            });
+        }
+        if (this.showDelete()) {
+            this.menuItems.push({
+                label: 'Delete',
+                icon: 'pi pi-trash',
+                styleClass: 'text-red-500', 
+                command: () => this.delete.emit(rowData)
+            });
+        }
+        menu.toggle(event);
     }
 
     getStatusClass(value: any): string {

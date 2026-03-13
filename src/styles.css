@@ -12,10 +12,6 @@
         -webkit-font-smoothing: antialiased;
     }
 
-    header {
-        height: 81px !important;
-    }
-
     .dark body {
         @apply bg-slate-950 text-slate-100;
     }

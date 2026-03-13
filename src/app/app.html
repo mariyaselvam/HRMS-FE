@@ -5,33 +5,33 @@
 <!-- Authenticated Layout -->
 <div class="h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300">
   <!-- Mobile Backdrop -->
-  <div *ngIf="sidebarVisible()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity"
-    (click)="toggleSidebar()"></div>
+  <div *ngIf="isMobileOpen()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity"
+    (click)="isMobileOpen.set(false)"></div>
 
   <!-- Sidebar Component -->
-  <app-sidebar [isOpen]="sidebarVisible()" (logout)="onLogout()"
-    (closeSidebar)="sidebarVisible.set(false)"></app-sidebar>
+  <app-sidebar [isMobileOpen]="isMobileOpen()" [isCollapsed]="isDesktopCollapsed()" (logout)="onLogout()"
+    (closeSidebar)="isMobileOpen.set(false)"></app-sidebar>
 
   <!-- Main Content -->
-  <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+  <main class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
     <!-- Header -->
     <header
-      class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 transition-colors duration-300">
+      class="h-16 shrink-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 md:px-8 transition-colors duration-300 z-10 w-full">
       <div class="flex items-center gap-4">
+        <!-- Sidebar Toggle -->
         <button
-          class="md:hidden p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+          class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:-translate-y-0.5 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl transition-all shadow-sm"
           (click)="toggleSidebar()">
-          <i class="pi pi-bars text-xl"></i>
+          <i class="pi text-xl" [ngClass]="{'pi-align-left': !isDesktopCollapsed() && !isMobileOpen(), 'pi-align-justify': isDesktopCollapsed(), 'pi-times': isMobileOpen()}"></i>
         </button>
       </div>
-
 
       <div class="flex items-center gap-4">
         <span class="text-sm font-medium text-slate-600 dark:text-slate-400 hidden sm:inline">
           {{ authService.user()?.email }}
         </span>
         <span
-          class="text-xs font-semibold px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-400 hidden sm:inline">
+          class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1.5 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-400 hidden sm:inline">
           {{ authService.userRole() }}
         </span>
 
@@ -47,8 +47,8 @@
     </header>
 
     <!-- Page Content -->
-    <div class="flex-1 overflow-y-auto p-8">
-      <div class="mx-auto">
+    <div class="flex-1 overflow-y-auto p-4 md:p-8">
+      <div class="mx-auto max-w-7xl">
         <router-outlet></router-outlet>
       </div>
     </div>

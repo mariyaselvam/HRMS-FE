@@ -84,3 +84,23 @@ export interface AssignShiftInput {
     shiftId: string;
     effectiveFrom: string; // YYYY-MM-DD
 }
+
+export function mapAttendanceLog(raw: any): AttendanceLog {
+    return {
+        id: raw.id,
+        employeeId: raw.employeeId || raw.employee_id,
+        shiftId: raw.shiftId || raw.shift_id,
+        workLocationId: raw.workLocationId || raw.work_location_id,
+        attendanceDate: raw.attendanceDate || raw.attendance_date,
+        checkIn: raw.checkIn || raw.check_in,
+        checkOut: raw.checkOut || raw.check_out,
+        totalHours: raw.totalHours !== undefined ? raw.totalHours : raw.total_hours,
+        status: raw.status,
+        note: raw.note,
+        createdAt: raw.createdAt || raw.created_at,
+        updatedAt: raw.updatedAt || raw.updated_at,
+        employee: raw.employee,
+        shift: raw.shift,
+        workLocation: raw.workLocation || raw.work_location,
+    };
+}

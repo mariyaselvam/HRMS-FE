@@ -13,7 +13,8 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class SidebarComponent {
     authService = inject(AuthService);
-    isOpen = input<boolean>(false);
+    isMobileOpen = input<boolean>(false);
+    isCollapsed = input<boolean>(false);
     readonly appTitle: string = SIDEBAR_APP_TITLE;
     readonly logo: string = '/logo1.png';
 

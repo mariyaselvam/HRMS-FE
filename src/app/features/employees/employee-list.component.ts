@@ -1,10 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeStore } from '../../store/employee.store';
 import { CommonTableComponent, Column } from '../../shared/components/common-table.component';
 import { CommonButtonComponent } from '../../shared/components/common-button.component';
 import { CardModule } from 'primeng/card';
-
+import { FormsModule } from '@angular/forms';
+import { PopoverModule } from 'primeng/popover';
+import { CommonInputComponent } from '../../shared/components/common-input.component';
+import { CommonSelectComponent } from '../../shared/components/common-select.component';
+import { ButtonModule } from 'primeng/button';
 import { Employee } from '../../core/models/employee.model';
 import { NotificationService } from '../../core/services/notification.service';
 import { Router } from '@angular/router';
@@ -12,7 +16,17 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-employee-list',
     standalone: true,
-    imports: [CommonModule, CommonTableComponent, CommonButtonComponent, CardModule],
+    imports: [
+        CommonModule, 
+        CommonTableComponent, 
+        CommonButtonComponent, 
+        CardModule,
+        FormsModule,
+        PopoverModule,
+        CommonInputComponent,
+        CommonSelectComponent,
+        ButtonModule
+    ],
     templateUrl: './employee-list.component.html'
 })
 export class EmployeeListComponent implements OnInit {
@@ -33,9 +47,73 @@ export class EmployeeListComponent implements OnInit {
         { field: 'employmentStatus', header: 'Status', type: 'status' }
     ];
 
+    // Filters
+    searchQuery = signal<string>('');
+    selectedDepartment = signal<string | null>(null);
+    selectedLocation = signal<string | null>(null);
+    selectedStatus = signal<string | null>(null);
 
+    activeFilterCount = computed(() => {
+        let count = 0;
+        if (this.searchQuery()) count++;
+        if (this.selectedDepartment()) count++;
+        if (this.selectedLocation()) count++;
+        if (this.selectedStatus()) count++;
+        return count;
+    });
 
-    ngOnInit() {
+    // Filter Options
+    departments = computed(() => {
+        const deps = this.store.employees().map(e => e.department).filter(d => !!d);
+        return [...new Set(deps)].map(d => ({ label: d, value: d }));
+    });
+
+    locations = computed(() => {
+        const locs = this.store.employees().map(e => e.workLocation).filter(l => !!l);
+        return [...new Set(locs)].map(l => ({ label: l, value: l }));
+    });
+
+    statuses = computed(() => {
+        const stats = this.store.employees().map(e => e.employmentStatus).filter(s => !!s);
+        return [...new Set(stats)].map(s => ({ label: s, value: s }));
+    });
+
+    // Filtered Data
+    filteredEmployees = computed(() => {
+        let data = this.store.employees();
+        
+        const q = this.searchQuery().toLowerCase();
+        if (q) {
+            data = data.filter(e => 
+                (e.employeeCode && e.employeeCode.toLowerCase().includes(q)) ||
+                (e.email && e.email.toLowerCase().includes(q))
+            );
+        }
+
+        const dept = this.selectedDepartment();
+        if (dept) {
+            data = data.filter(e => e.department === dept);
+        }
+
+        const loc = this.selectedLocation();
+        if (loc) {
+            data = data.filter(e => e.workLocation === loc);
+        }
+
+        const status = this.selectedStatus();
+        if (status) {
+            data = data.filter(e => e.employmentStatus === status);
+        }
+
+        return data;
+    });
+
+    clearFilters() {
+        this.searchQuery.set('');
+        this.selectedDepartment.set(null);
+        this.selectedLocation.set(null);
+        this.selectedStatus.set(null);
+    }    ngOnInit() {
         this.store.loadEmployees();
     }
 

@@ -1,37 +1,62 @@
-<aside [class.hidden]="!isOpen()" [class.flex]="isOpen()"
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col md:relative md:flex transition-transform duration-300 md:translate-x-0"
-    [class.-translate-x-full]="!isOpen()" [class.translate-x-0]="isOpen()">
+<aside 
+    class="fixed inset-y-0 left-0 z-50 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out md:relative w-[260px] md:translate-x-0"
+    [class.md:w-[80px]]="isCollapsed()"
+    [class.-translate-x-full]="!isMobileOpen()"
+    [class.translate-x-0]="isMobileOpen()">
+
     <!-- App Branding -->
-    <div class="p-6 border-b border-slate-200 dark:border-slate-800">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-            {{ appTitle }}
-        </h1>
+    <div class="h-16 shrink-0 flex items-center border-b border-slate-200 dark:border-slate-800 transition-all duration-300 relative"
+         [ngClass]="isCollapsed() ? 'justify-center w-[80px] px-0' : 'justify-start px-6 w-[260px]'">
+         
+         <div class="flex items-center gap-3 w-full" [class.justify-center]="isCollapsed()" [class.px-6]="isCollapsed()">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white shrink-0 shadow-md transition-transform duration-300 hover:scale-105">
+                <i class="pi pi-bolt text-lg"></i>
+            </div>
+            <h1 class="text-xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent whitespace-nowrap overflow-hidden transition-all duration-300"
+                [class.w-0]="isCollapsed()"
+                [class.opacity-0]="isCollapsed()"
+                [style.width]="!isCollapsed() ? 'auto' : '0px'">
+                {{ appTitle }}
+            </h1>
+         </div>
     </div>
 
     <!-- Navigation Links -->
-    <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+    <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto overflow-x-hidden transition-all duration-300 custom-scrollbar">
         @for (item of navItems(); track item.route) {
-        <a [routerLink]="item.route" routerLinkActive="sidebar-link-active"
-            [routerLinkActiveOptions]="{ exact: item.exact ?? false }" class="sidebar-link" (click)="onLinkClick()">
-            <i [class]="item.icon"></i>
-            {{ item.label }}
+        <a [routerLink]="item.route" routerLinkActive="bg-indigo-50/80 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 shadow-sm ring-1 ring-indigo-100 dark:ring-indigo-900/50"
+            [routerLinkActiveOptions]="{ exact: item.exact ?? false }" 
+            class="flex items-center p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-300 text-slate-500 dark:text-slate-400 font-medium group relative"
+            (click)="onLinkClick()"
+            [title]="isCollapsed() ? item.label : ''">
+            
+            <i [ngClass]="item.icon" class="text-[1.3rem] shrink-0 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-active:scale-95 transition-all"
+                [class.mx-auto]="isCollapsed()" [class.mr-3.5]="!isCollapsed()">
+            </i>
+            <span class="whitespace-nowrap overflow-hidden transition-all duration-300 tracking-wide text-[15px]"
+                  [class.w-0]="isCollapsed()"
+                  [class.opacity-0]="isCollapsed()">
+                {{ item.label }}
+            </span>
         </a>
         }
     </nav>
 
     <!-- User Profile Section -->
-    <div class="p-4 border-t border-slate-200 dark:border-slate-800">
-        <div class="flex items-center gap-3 p-2">
+    <div class="p-3 border-t border-slate-200 dark:border-slate-800 overflow-hidden transition-all duration-300">
+        <div class="flex items-center p-2 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
+             [class.justify-center]="isCollapsed()">
             <div
-                class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-950/40 flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold">
+                class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-100 to-indigo-50 dark:from-indigo-950/60 dark:to-indigo-900/20 border border-indigo-200 dark:border-indigo-800/50 flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
                 {{ authService.user()?.email?.charAt(0)?.toUpperCase() }}
             </div>
-            <div>
-                <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{
+            <div class="ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 flex-1"
+                [class.w-0]="isCollapsed()"
+                [class.opacity-0]="isCollapsed()">
+                <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate w-36 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{
                     authService.user()?.email?.split('@')?.[0] || 'User' }}</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400">{{ authService.userRole() }}</p>
+                <p class="text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-500 font-bold mt-0.5">{{ authService.userRole() }}</p>
             </div>
-
         </div>
     </div>
 </aside>
