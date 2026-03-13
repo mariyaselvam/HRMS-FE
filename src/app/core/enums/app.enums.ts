@@ -12,11 +12,3 @@ export enum AttendanceStatus {
     LATE = 'LATE',
     LEAVE = 'LEAVE'
 }
-
-export enum UserRole {
-    SUPER_ADMIN = 'SUPER_ADMIN',
-    COMPANY_ADMIN = 'COMPANY_ADMIN',
-    MANAGER = 'MANAGER',
-    HR = 'HR',
-    EMPLOYEE = 'EMPLOYEE'
-}

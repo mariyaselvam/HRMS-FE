@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <p-card styleClass="!shadow-sm !border-slate-200">
+    <p-card styleClass="!shadow-sm !border-slate-300">
         <app-common-table [data]="store.allRequests()" [columns]="columns" [hasActions]="true"
             (edit)="openReviewDialog($event)">
         </app-common-table>
@@ -56,7 +56,7 @@
             </app-common-input>
         </form>
 
-        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-300">
             <app-button label="Reject" variant="ghost" (onClick)="onAction('rejected')"
                 class="text-rose-600"></app-button>
             <app-button label="Approve Request" icon="pi pi-check" variant="primary"

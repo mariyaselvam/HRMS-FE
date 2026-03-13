@@ -7,7 +7,7 @@
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Employees</p>
@@ -27,7 +27,7 @@
             </div>
         </p-card>
 
-        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Present Today</p>
@@ -45,7 +45,7 @@
             </div>
         </p-card>
 
-        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Leave Requests</p>
@@ -62,7 +62,7 @@
             </div>
         </p-card>
 
-        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800">
+        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800">
             <div class="flex items-center justify-between">
                 <div *ngIf="summary.latestPayroll; else noPayroll">
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Latest Payroll</p>
@@ -89,15 +89,15 @@
 
     <!-- Activity Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <p-card styleClass="lg:col-span-2 !shadow-sm !border-slate-200 dark:!border-slate-800"
+        <p-card styleClass="lg:col-span-2 !shadow-sm !border-slate-300 dark:!border-slate-800"
             header="Employee Attendance Overview">
             <div
-                class="h-64 flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                class="h-64 flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700">
                 <p class="text-slate-400 dark:text-slate-500">Chart Visualization Placeholder</p>
             </div>
         </p-card>
 
-        <p-card styleClass="!shadow-sm !border-slate-200 dark:!border-slate-800" header="Upcoming Events">
+        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800" header="Upcoming Events">
             <div class="space-y-6">
                 <!-- Static for now, as backend doesn't have an events endpoint yet -->
                 <div class="flex gap-4">

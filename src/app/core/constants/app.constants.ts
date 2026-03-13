@@ -14,7 +14,7 @@ export const API_ENDPOINTS = {
   EMPLOYEE_DOCUMENTS: (id: string) => `/employees/${id}/documents`,
   EMPLOYEE_FINALIZE: (id: string) => `/employees/${id}/finalize`,
   ATTENDANCE: '/attendance',
-  ATTENDANCE_ADMIN_LOGS: '/attendance',
+  ATTENDANCE_ADMIN_LOGS: '/attendance/logs',
   PAYROLL: '/payroll',
   SALARY_SETUP: '/payroll/salary-setup',
   SALARY_STRUCTURE: (id: string) => `/payroll/salary-structure/${id}`,

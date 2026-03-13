@@ -28,9 +28,11 @@ export const TAX_OPTIONS = [
 ];
 
 export const ROLE_OPTIONS = [
-    { label: 'Employee', value: 'employee' },
-    { label: 'Manager', value: 'manager' },
-    { label: 'HR', value: 'hr' }
+    { label: 'Employee', value: 'EMPLOYEE' },
+    { label: 'Manager', value: 'MANAGER' },
+    { label: 'HR', value: 'HR' },
+    { label: 'COMPANY_ADMIN', value: 'COMPANY_ADMIN' },
+    { label: 'SUPER_ADMIN', value: 'SUPER_ADMIN' }
 ];
 
 export const STATUS_OPTIONS = [

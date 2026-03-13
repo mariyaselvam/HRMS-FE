@@ -7,7 +7,7 @@
         <app-button label="Create Team" icon="pi pi-plus" variant="primary" (onClick)="openAddDialog()"></app-button>
     </div>
 
-    <p-card styleClass="!shadow-sm !border-slate-200">
+    <p-card styleClass="!shadow-sm !border-slate-300">
         <app-common-table [data]="store.teams()" [columns]="columns" [hasActions]="true" (edit)="onEdit($event)"
             (delete)="onDelete($event)">
         </app-common-table>
@@ -27,7 +27,7 @@
             placeholder="Select Department" [error]="getErrorMessage('departmentId')">
         </app-common-select>
 
-        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-300">
             <app-button label="Cancel" variant="secondary" (onClick)="showDialog = false"></app-button>
             <app-button type="submit" [label]="isEdit ? 'Update Team' : 'Save Team'" icon="pi pi-check"
                 variant="primary"></app-button>

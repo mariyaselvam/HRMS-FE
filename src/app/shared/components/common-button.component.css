@@ -37,7 +37,7 @@
 
 /* ========== Secondary ========== */
 .btn-secondary {
-    @apply bg-white text-slate-700 border-[1.5px] border-slate-200;
+    @apply bg-white text-slate-700 border-[1.5px] border-slate-300;
 }
 
 .dark .btn-secondary {

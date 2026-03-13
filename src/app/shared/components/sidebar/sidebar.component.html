@@ -1,11 +1,11 @@
 <aside 
-    class="fixed inset-y-0 left-0 z-50 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out md:relative w-[260px] md:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 bg-white dark:bg-slate-900 border-r border-slate-300 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out md:relative w-[260px] md:translate-x-0"
     [class.md:w-[80px]]="isCollapsed()"
     [class.-translate-x-full]="!isMobileOpen()"
     [class.translate-x-0]="isMobileOpen()">
 
     <!-- App Branding -->
-    <div class="h-16 shrink-0 flex items-center border-b border-slate-200 dark:border-slate-800 transition-all duration-300 relative"
+    <div class="h-16 shrink-0 flex items-center border-b border-slate-300 dark:border-slate-800 transition-all duration-300 relative"
          [ngClass]="isCollapsed() ? 'justify-center w-[80px] px-0' : 'justify-start px-6 w-[260px]'">
          
          <div class="flex items-center gap-3 w-full" [class.justify-center]="isCollapsed()" [class.px-6]="isCollapsed()">
@@ -43,7 +43,7 @@
     </nav>
 
     <!-- User Profile Section -->
-    <div class="p-3 border-t border-slate-200 dark:border-slate-800 overflow-hidden transition-all duration-300">
+    <div class="p-3 border-t border-slate-300 dark:border-slate-800 overflow-hidden transition-all duration-300">
         <div class="flex items-center p-2 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group"
              [class.justify-center]="isCollapsed()">
             <div

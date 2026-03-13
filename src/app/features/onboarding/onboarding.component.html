@@ -23,7 +23,7 @@
             <!-- Step 1: Core Account -->
             <p-step-panel [value]="1">
                 <ng-template pTemplate="content" let-nextCallback="nextCallback">
-                    <p-card class="!shadow-none !border-slate-200">
+                    <p-card class="!shadow-none !border-gray-400 border-1">
                         <form [formGroup]="step1Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <app-common-input formControlName="email" label="Work Email" type="email"
                                 [error]="getErrorMessage(step1Form, 'email')"></app-common-input>
@@ -34,8 +34,7 @@
                             <app-common-select formControlName="departmentId" label="Department"
                                 [options]="deptOptions()"
                                 [error]="getErrorMessage(step1Form, 'departmentId')"></app-common-select>
-                            <app-common-select formControlName="teamId" label="Team"
-                                [options]="teamOptions()"
+                            <app-common-select formControlName="teamId" label="Team" [options]="teamOptions()"
                                 [error]="getErrorMessage(step1Form, 'teamId')"></app-common-select>
                             <app-common-select formControlName="workLocationId" label="Work Location (Branch)"
                                 [options]="locationOptions()"
@@ -61,7 +60,7 @@
             <!-- Step 2: Personal Details -->
             <p-step-panel [value]="2">
                 <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
-                    <p-card class="!shadow-none !border-slate-200">
+                    <p-card class="!shadow-none !border-slate-300">
                         <form [formGroup]="step2Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <app-common-input formControlName="firstName" label="First Name"
                                 [error]="getErrorMessage(step2Form, 'firstName')"></app-common-input>
@@ -88,7 +87,7 @@
             <!-- Step 3: Job Details -->
             <p-step-panel [value]="3">
                 <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
-                    <p-card class="!shadow-none !border-slate-200">
+                    <p-card class="!shadow-none !border-slate-300">
                         <form [formGroup]="step3Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <app-common-input formControlName="designation" label="Designation"></app-common-input>
                             <app-common-select formControlName="employmentType" label="Employment Type"
@@ -113,7 +112,7 @@
             <!-- Step 4: Bank Details -->
             <p-step-panel [value]="4">
                 <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
-                    <p-card class="!shadow-none !border-slate-200">
+                    <p-card class="!shadow-none !border-slate-300">
                         <h3 class="text-lg font-bold mb-6 text-slate-800">Bank Account Information</h3>
                         <form [formGroup]="step4Form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <app-common-input formControlName="accountNumber" label="Bank Account Number"
@@ -136,7 +135,7 @@
             <!-- Step 5: Compensation & Statutory (Indian Context) -->
             <p-step-panel [value]="5">
                 <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
-                    <p-card class="!shadow-none !border-slate-200">
+                    <p-card class="!shadow-none !border-slate-300">
                         <div class="space-y-8">
                             <!-- Salary Details -->
                             <div>
@@ -211,7 +210,7 @@
             <!-- Step 6: Documents & Finalize -->
             <p-step-panel [value]="6">
                 <ng-template pTemplate="content" let-prevCallback="prevCallback">
-                    <p-card class="!shadow-none !border-slate-200">
+                    <p-card class="!shadow-none !border-slate-300">
                         <div class="mb-8">
                             <h3 class="text-lg font-bold mb-2 text-slate-800">Final Verification</h3>
                             <p class="text-sm text-slate-500">Upload mandatory documents and activate the employee
@@ -235,7 +234,7 @@
                                             <p class="text-xs text-slate-500 mt-1">PDF, DOCX up to 5MB</p>
                                         </div>
                                         <label
-                                            class="mt-4 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2">
+                                            class="mt-4 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2">
                                             <span>Browse Files</span>
                                             <input type="file" class="sr-only" accept=".pdf,.doc,.docx"
                                                 (change)="onFileSelect($event, 'resume')">
@@ -281,7 +280,7 @@
                                             <p class="text-xs text-slate-500 mt-1">JPG, PNG, PDF up to 5MB</p>
                                         </div>
                                         <label
-                                            class="mt-4 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2">
+                                            class="mt-4 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2">
                                             <span>Browse Files</span>
                                             <input type="file" class="sr-only" accept=".jpg,.jpeg,.png,.pdf"
                                                 (change)="onFileSelect($event, 'id_proof')">
@@ -291,7 +290,7 @@
                                 <ng-template #idPreview>
                                     <div class="flex flex-col items-center justify-center gap-4">
                                         <div
-                                            class="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center relative group">
+                                            class="w-24 h-24 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center relative group">
                                             <img *ngIf="getFileForType('id_proof')?.previewUrl"
                                                 [src]="getFileForType('id_proof')?.previewUrl"
                                                 class="w-full h-full object-cover">

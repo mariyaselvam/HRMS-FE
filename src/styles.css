@@ -82,7 +82,7 @@
 
     /* PrimeNG Component Overrides */
     .p-card {
-        @apply !shadow-sm !border !border-slate-200 !rounded-2xl transition-all duration-200;
+        @apply !shadow-sm !border !border-slate-300 !rounded-2xl transition-all duration-200;
     }
 
     .dark .p-card {
@@ -100,7 +100,7 @@
 
     .p-inputtext,
     .p-select {
-        @apply !rounded-xl !border-slate-200 transition-all duration-200;
+        @apply !rounded-xl !border-slate-300 transition-all duration-200;
     }
 
     .dark .p-inputtext,
@@ -118,7 +118,7 @@
 
     /* Fixed Select Dropdown and List */
     .p-select-overlay {
-        @apply !bg-white !border !border-slate-200 !shadow-xl !rounded-xl !mt-2;
+        @apply !bg-white !border !border-slate-300 !shadow-xl !rounded-xl !mt-2;
     }
 
     .dark .p-select-overlay {
@@ -167,11 +167,11 @@
     /* Improved Input Colors & STRICT UNIFORM HEIGHT */
     .p-inputtext,
     .p-datepicker-input {
-        @apply !bg-slate-100/50 !border-slate-200 !text-slate-800 !h-[44px] !transition-all !shadow-sm;
+        @apply !bg-slate-100/50 !border-slate-300 !text-slate-800 !h-[44px] !transition-all !shadow-sm;
     }
 
     .p-select {
-        @apply !bg-white !border-slate-200 !text-slate-800 !h-[44px] !transition-all !shadow-sm;
+        @apply !bg-white !border-slate-300 !text-slate-800 !h-[44px] !transition-all !shadow-sm;
     }
 
     .p-inputtext:hover,

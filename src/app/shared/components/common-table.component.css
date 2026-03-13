@@ -1,4 +1,4 @@
-﻿:host ::ng-deep {
+:host ::ng-deep {
     .p-datatable {
         @apply border-none bg-transparent !important;
     }

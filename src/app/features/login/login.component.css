@@ -111,7 +111,7 @@
 }
 
 .login-input {
-    @apply w-full pl-11 h-12 rounded-xl border-slate-200 text-sm transition-all bg-white text-slate-900 !important;
+    @apply w-full pl-11 h-12 rounded-xl border-slate-300 text-sm transition-all bg-white text-slate-900 !important;
 }
 
 :host-context(.dark) .login-input {
@@ -143,7 +143,7 @@
 }
 
 .role-hints {
-    @apply mt-10 pt-8 border-t border-slate-200 text-center;
+    @apply mt-10 pt-8 border-t border-slate-300 text-center;
 }
 
 :host-context(.dark) .role-hints {

@@ -7,7 +7,7 @@
         <app-button label="Add Holiday" icon="pi pi-plus" variant="primary" (onClick)="openAddDialog()"></app-button>
     </div>
 
-    <p-card styleClass="!shadow-sm !border-slate-200">
+    <p-card styleClass="!shadow-sm !border-slate-300">
         <app-common-table [data]="store.holidays()" [columns]="columns" [hasActions]="true" [showEdit]="false"
             (delete)="onDelete($event)">
         </app-common-table>
@@ -31,7 +31,7 @@
             <label for="isOptional" class="text-sm font-medium text-slate-700">Optional Holiday</label>
         </div>
 
-        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
+        <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-300">
             <app-button label="Cancel" variant="secondary" (onClick)="showDialog = false"></app-button>
             <app-button type="submit" label="Save Holiday" icon="pi pi-check" variant="primary"></app-button>
         </div>
