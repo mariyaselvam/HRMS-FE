@@ -78,6 +78,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/payroll/payroll.component').then(m => m.PayrollComponent),
         canActivate: [authGuard]
     },
+    {
+        path: 'settings',
+        loadChildren: () => import('./features/settings/settings.routes').then(m => m.SETTINGS_ROUTES),
+        canActivate: [authGuard]
+    },
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: '**', redirectTo: 'dashboard' }
 ];
