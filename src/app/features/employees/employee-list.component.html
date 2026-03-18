@@ -17,22 +17,26 @@
                     class="flex items-center gap-2.5 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl shadow-sm hover:border-indigo-500 dark:hover:border-indigo-500/50 transition-all active:scale-95 group">
                     <i class="pi pi-filter text-slate-400 group-hover:text-indigo-500 transition-colors"></i>
                     <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Filters</span>
-                    <span *ngIf="activeFilterCount() > 0"
+                    @if (activeFilterCount() > 0) {
+                    <span
                         class="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold bg-indigo-600 text-white rounded-full">
                         {{ activeFilterCount() }}
                     </span>
+                    }
                 </button>
 
                 <!-- Reset All (Quick Action) -->
-                <button *ngIf="activeFilterCount() > 0" (click)="clearFilters()"
+                @if (activeFilterCount() > 0) {
+                <button (click)="clearFilters()"
                     class="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all"
                     title="Clear all filters">
                     <i class="pi pi-refresh text-sm"></i>
                 </button>
+                }
             </div>
         </div>
 
-        <p-card styleClass="!shadow-none !border-slate-300 dark:!border-slate-800 !mt-2 !overflow-hidden">
+        <p-card class="!shadow-none !border-slate-300 dark:!border-slate-800 !mt-2 !overflow-hidden">
             <app-common-table [data]="filteredEmployees()" [columns]="columns" [hasActions]="true" [showView]="true"
                 (view)="onView($event)" (edit)="onEdit($event)" (delete)="onDelete($event)">
             </app-common-table>
@@ -41,7 +45,7 @@
 
     <!-- The Filter Popover (Placed at bottom to prevent destruction/NG0100 errors) -->
     <p-popover #op appendTo="body"
-        styleClass="!rounded-2xl !shadow-2xl !border-slate-300 dark:!border-slate-800 !p-0 !overflow-hidden !mt-2">
+        class="!rounded-2xl !shadow-2xl !border-slate-300 dark:!border-slate-800 !p-0 !overflow-hidden !mt-2">
         <div class="w-[340px] md:w-[420px] bg-white dark:bg-slate-950">
             <div
                 class="p-4 bg-slate-50/80 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">

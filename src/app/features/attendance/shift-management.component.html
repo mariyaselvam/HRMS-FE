@@ -47,7 +47,7 @@
 
     <!-- Assign Shift Dialog -->
     <p-dialog [(visible)]="showAssignShift" header="Assign Shift to Employee" [modal]="true" [style]="{width: '450px'}"
-        styleClass="p-fluid">
+        class="p-fluid">
         <form [formGroup]="assignForm" (ngSubmit)="onAssignShift()" class="space-y-4 pt-4">
             <app-common-select label="Select Employee" formControlName="employeeId" [options]="employeeOptions"
                 placeholder="Choose employee">

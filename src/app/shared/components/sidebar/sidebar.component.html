@@ -24,7 +24,7 @@
     <!-- Navigation Links -->
     <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto overflow-x-hidden transition-all duration-300 custom-scrollbar">
         @for (item of navItems(); track item.route) {
-        <a [routerLink]="item.route" routerLinkActive="bg-indigo-50/80 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 shadow-sm ring-1 ring-indigo-100 dark:ring-indigo-900/50"
+        <a [routerLink]="item.route" routerLinkActive="active-nav !bg-indigo-100/70 !text-indigo-700 ring-1 ring-indigo-200/50 dark:!bg-indigo-600/20 dark:!text-indigo-400 dark:ring-indigo-500/20"
             [routerLinkActiveOptions]="{ exact: item.exact ?? false }" 
             class="flex items-center p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all duration-300 text-slate-500 dark:text-slate-400 font-medium group relative"
             (click)="onLinkClick()"

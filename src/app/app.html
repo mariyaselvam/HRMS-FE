@@ -5,8 +5,10 @@
 <!-- Authenticated Layout -->
 <div class="h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300">
   <!-- Mobile Backdrop -->
-  <div *ngIf="isMobileOpen()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity"
+  @if (isMobileOpen()) {
+  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity"
     (click)="isMobileOpen.set(false)"></div>
+  }
 
   <!-- Sidebar Component -->
   <app-sidebar [isMobileOpen]="isMobileOpen()" [isCollapsed]="isDesktopCollapsed()" (logout)="onLogout()"
@@ -36,18 +38,18 @@
         </span>
 
         <p-button [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'" [text]="true" [rounded]="true"
-          styleClass="!text-slate-600 dark:!text-slate-400" (onClick)="themeService.toggleTheme()">
+          class="!text-slate-600 dark:!text-slate-400" (onClick)="themeService.toggleTheme()">
         </p-button>
 
         <p-button icon="pi pi-bell" [text]="true" [rounded]="true"
-          styleClass="!text-slate-600 dark:!text-slate-400"></p-button>
+          class="!text-slate-600 dark:!text-slate-400"></p-button>
         <p-button label="Logout" icon="pi pi-power-off" severity="secondary" variant="outlined" size="small"
           (onClick)="onLogout()"></p-button>
       </div>
     </header>
 
     <!-- Page Content -->
-    <div class="flex-1 overflow-y-auto p-4 md:p-8">
+    <div class="flex-1 overflow-y-auto p-3 md:p-8">
       <div class="mx-auto">
         <router-outlet></router-outlet>
       </div>

@@ -36,7 +36,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Check In/Out Widget -->
             <p-card
-                styleClass="!shadow-indigo-100/50 !shadow-lg !border-none !overflow-hidden dark:!shadow-none dark:!border dark:!border-slate-800">
+                class="!shadow-indigo-100/50 !shadow-lg !border-none !overflow-hidden dark:!shadow-none dark:!border dark:!border-slate-800">
                 <div class="p-2">
                     <div class="text-center space-y-4">
                         <!-- Live Clock -->
@@ -103,7 +103,7 @@
 
             <!-- Quick Stats Cards -->
             <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 content-start">
-                <p-card styleClass="!shadow-sm !border-slate-100 dark:!border-slate-800 h-full">
+                <p-card class="!shadow-sm !border-slate-100 dark:!border-slate-800 h-full">
                     <div class="flex items-center gap-4">
                         <div
                             class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
@@ -116,7 +116,7 @@
                     </div>
                 </p-card>
 
-                <p-card styleClass="!shadow-sm !border-slate-100 dark:!border-slate-800 h-full">
+                <p-card class="!shadow-sm !border-slate-100 dark:!border-slate-800 h-full">
                     <div class="flex items-center gap-4">
                         <div
                             class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
@@ -130,7 +130,7 @@
                     </div>
                 </p-card>
 
-                <p-card styleClass="!shadow-sm !border-slate-100 dark:!border-slate-800 h-full md:col-span-2">
+                <p-card class="!shadow-sm !border-slate-100 dark:!border-slate-800 h-full md:col-span-2">
                     <div class="flex items-center gap-4">
                         <div
                             class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
@@ -176,7 +176,7 @@
         </div>
 
         <!-- Attendance History Table -->
-        <p-card styleClass="!shadow-none !border-slate-300 dark:!border-slate-800 !mt-2 !overflow-hidden">
+        <p-card class="!shadow-none !border-slate-300 dark:!border-slate-800 !mt-2 !overflow-hidden">
             <app-common-table [data]="store.logs()" [columns]="columns" [lazy]="true" [totalRecords]="store.totalLogs()"
                 [rows]="store.limit()" (onLazyLoad)="onLazyLoad($event)">
             </app-common-table>
@@ -188,7 +188,7 @@
 
     <!-- The Filter Popover (Placed at bottom to prevent destruction/NG0100 errors) -->
     <p-popover #op appendTo="body"
-        styleClass="!rounded-2xl !shadow-2xl !border-slate-300 dark:!border-slate-800 !p-0 !overflow-hidden !mt-2">
+        class="!rounded-2xl !shadow-2xl !border-slate-300 dark:!border-slate-800 !p-0 !overflow-hidden !mt-2">
         <div class="w-[340px] md:w-[420px] bg-white dark:bg-slate-950">
             <div
                 class="p-4 bg-slate-50/80 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">

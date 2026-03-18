@@ -76,7 +76,10 @@ export class CompanySettingsComponent {
         effect(() => {
             const data = catSettings();
             if (data && Object.keys(data).length > 0) {
-                this.form = { ...this.form, ...data };
+                // Wrap in setTimeout to avoid NG0100: ExpressionChangedAfterItHasBeenCheckedError
+                setTimeout(() => {
+                    this.form = { ...this.form, ...data };
+                });
             }
         });
     }

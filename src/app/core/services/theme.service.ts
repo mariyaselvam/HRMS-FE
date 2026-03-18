@@ -10,6 +10,8 @@ export class ThemeService {
     constructor() {
         effect(() => {
             const mode = this.isDarkMode();
+            if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
+
             if (mode) {
                 document.documentElement.classList.add('dark');
                 localStorage.setItem(this.THEME_KEY, 'dark');
@@ -25,6 +27,9 @@ export class ThemeService {
     }
 
     private getInitialTheme(): boolean {
+        if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+            return false;
+        }
         const saved = localStorage.getItem(this.THEME_KEY);
         if (saved) {
             return saved === 'dark';

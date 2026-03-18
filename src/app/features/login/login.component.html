@@ -38,7 +38,7 @@
             </div>
 
             @if (errorMessage) {
-            <p-message severity="error" [text]="errorMessage" styleClass="w-full mb-4"></p-message>
+            <p-message severity="error" [text]="errorMessage" class="w-full mb-4"></p-message>
             }
 
             <form (ngSubmit)="onSubmit()" class="login-form">
@@ -64,7 +64,7 @@
                 </div>
 
                 <p-button type="submit" label="Sign in" icon="pi pi-sign-in" [loading]="loading"
-                    styleClass="w-full login-btn"></p-button>
+                    class="w-full login-btn"></p-button>
             </form>
 
             <div class="role-hints">

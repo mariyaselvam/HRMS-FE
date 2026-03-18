@@ -1,4 +1,5 @@
-<div class="space-y-8" *ngIf="store.summary() as summary">
+@if (store.summary(); as summary) {
+<div class="space-y-8">
     <!-- Welcome Section -->
     <section>
         <h2 class="text-3xl font-bold text-slate-900 dark:text-slate-100 border-none">Welcome Back, Admin!</h2>
@@ -7,7 +8,7 @@
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800">
+        <p-card class="!shadow-sm !border-slate-300 dark:!border-slate-800">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Employees</p>
@@ -20,14 +21,16 @@
                 </div>
             </div>
             <div class="mt-4 flex flex-wrap gap-2">
-                <span *ngFor="let item of summary.employees.breakdown"
+                @for (item of summary.employees.breakdown; track item.status) {
+                <span
                     class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                     {{ item.status | titlecase }}: {{ item.count }}
                 </span>
+                }
             </div>
         </p-card>
 
-        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800">
+        <p-card class="!shadow-sm !border-slate-300 dark:!border-slate-800">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Present Today</p>
@@ -45,7 +48,7 @@
             </div>
         </p-card>
 
-        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800">
+        <p-card class="!shadow-sm !border-slate-300 dark:!border-slate-800">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Leave Requests</p>
@@ -62,34 +65,36 @@
             </div>
         </p-card>
 
-        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800">
+        <p-card class="!shadow-sm !border-slate-300 dark:!border-slate-800">
             <div class="flex items-center justify-between">
-                <div *ngIf="summary.latestPayroll; else noPayroll">
+                @if (summary.latestPayroll) {
+                <div>
                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Latest Payroll</p>
                     <h3 class="text-2xl font-bold mt-1 text-slate-900 dark:text-slate-100">₹{{
                         summary.latestPayroll.totalNetSalary | number }}</h3>
                 </div>
-                <ng-template #noPayroll>
-                    <div>
-                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Payroll</p>
-                        <h3 class="text-lg font-bold mt-1 text-slate-400">No finalized data</h3>
-                    </div>
-                </ng-template>
+                } @else {
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Payroll</p>
+                    <h3 class="text-lg font-bold mt-1 text-slate-400">No finalized data</h3>
+                </div>
+                }
                 <div
                     class="w-12 h-12 rounded-2xl bg-violet-50 dark:bg-violet-950/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
                     <i class="pi pi-money-bill text-xl"></i>
                 </div>
             </div>
-            <div class="mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium"
-                *ngIf="summary.latestPayroll">
+            @if (summary.latestPayroll) {
+            <div class="mt-4 flex items-center text-xs text-slate-500 dark:text-slate-400 font-medium">
                 {{ summary.latestPayroll.month | date:'MMMM yyyy' }}
             </div>
+            }
         </p-card>
     </div>
 
     <!-- Activity Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <p-card styleClass="lg:col-span-2 !shadow-sm !border-slate-300 dark:!border-slate-800"
+        <p-card class="lg:col-span-2 !shadow-sm !border-slate-300 dark:!border-slate-800"
             header="Employee Attendance Overview">
             <div
                 class="h-64 flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700">
@@ -97,7 +102,7 @@
             </div>
         </p-card>
 
-        <p-card styleClass="!shadow-sm !border-slate-300 dark:!border-slate-800" header="Upcoming Events">
+        <p-card class="!shadow-sm !border-slate-300 dark:!border-slate-800" header="Upcoming Events">
             <div class="space-y-6">
                 <!-- Static for now, as backend doesn't have an events endpoint yet -->
                 <div class="flex gap-4">
@@ -126,12 +131,15 @@
 
             <div class="mt-8">
                 <p-button label="View All Events" [text]="true"
-                    styleClass="!p-0 !text-indigo-600 dark:!text-indigo-400 text-sm font-bold"></p-button>
+                    class="!p-0 !text-indigo-600 dark:!text-indigo-400 text-sm font-bold"></p-button>
             </div>
         </p-card>
     </div>
 </div>
+}
 
-<div *ngIf="store.loading()" class="h-64 flex items-center justify-center">
+@if (store.loading()) {
+<div class="h-64 flex items-center justify-center">
     <i class="pi pi-spin pi-spinner text-4xl text-indigo-600"></i>
 </div>
+}

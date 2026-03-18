@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <p-card styleClass="!shadow-sm !border-slate-300">
+    <p-card class="!shadow-sm !border-slate-300">
         <app-common-table [data]="store.allRequests()" [columns]="columns" [hasActions]="true"
             (edit)="openReviewDialog($event)">
         </app-common-table>
@@ -15,7 +15,7 @@
 
 <!-- Review Leave Dialog -->
 <p-dialog header="Review Leave Request" [(visible)]="showDialog" [modal]="true" [draggable]="false" [resizable]="false"
-    [style]="{ width: '450px' }" styleClass="!rounded-2xl">
+    [style]="{ width: '450px' }" class="!rounded-2xl">
 
     @if (selectedRequest) {
     <div class="space-y-4 pt-2">

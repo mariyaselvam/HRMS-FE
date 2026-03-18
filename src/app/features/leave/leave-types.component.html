@@ -7,7 +7,7 @@
         <app-button label="Add Leave Type" icon="pi pi-plus" variant="primary" (onClick)="openAddDialog()"></app-button>
     </div>
 
-    <p-card styleClass="!shadow-sm !border-slate-300">
+    <p-card class="!shadow-sm !border-slate-300">
         <app-common-table [data]="store.leaveTypes()" [columns]="columns">
         </app-common-table>
     </p-card>
@@ -15,7 +15,7 @@
 
 <!-- Add Leave Type Dialog -->
 <p-dialog header="New Leave Type" [(visible)]="showDialog" [modal]="true" [draggable]="false" [resizable]="false"
-    [style]="{ width: '500px' }" styleClass="!rounded-2xl">
+    [style]="{ width: '500px' }" class="!rounded-2xl">
 
     <form [formGroup]="form" (ngSubmit)="onSave()" class="grid grid-cols-1 gap-5 pt-4">
         <app-common-input label="Name" formControlName="name" placeholder="e.g. Annual Leave"

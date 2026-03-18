@@ -73,7 +73,9 @@ export class PayrollSettingsComponent {
         effect(() => {
             const data = catSettings();
             if (data && Object.keys(data).length > 0) {
-                this.form = { ...this.form, ...data };
+                setTimeout(() => {
+                    this.form = { ...this.form, ...data };
+                });
             }
         });
     }

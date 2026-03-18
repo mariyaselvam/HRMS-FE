@@ -1,5 +1,5 @@
 <p-table [value]="data()" [lazy]="lazy()" [totalRecords]="totalRecords()" [loading]="false" [paginator]="true"
-    [rows]="rows()" (onLazyLoad)="onLazyLoad.emit($event)" [responsiveLayout]="'scroll'" [styleClass]="'p-datatable-sm'"
+    [rows]="rows()" (onLazyLoad)="onLazyLoad.emit($event)" [responsiveLayout]="'scroll'" [class]="'p-datatable-sm'"
     [scrollable]="true" scrollHeight="calc(100vh - 300px)"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
 
@@ -14,8 +14,9 @@
                 </div>
             </th>
             }
-            <th *ngIf="hasActions()"
-                class="!py-4 !px-6 !text-slate-600 dark:!text-slate-400 !font-semibold !border-none">Actions</th>
+            @if (hasActions()) {
+            <th class="!py-4 !px-6 !text-slate-600 dark:!text-slate-400 !font-semibold !border-none">Actions</th>
+            }
         </tr>
     </ng-template>
 
@@ -53,13 +54,16 @@
                 }
             </td>
             }
-            <td *ngIf="hasActions()"
-                class="!py-4 !px-6 !border-b !border-slate-100 dark:!border-slate-800 !bg-transparent w-16 text-center">
-                <div *ngIf="rowData">
+            @if (hasActions()) {
+            <td class="!py-4 !px-6 !border-b !border-slate-100 dark:!border-slate-800 !bg-transparent w-16 text-center">
+                @if (rowData) {
+                <div>
                     <p-button icon="pi pi-ellipsis-v" (click)="onActionClick($event, rowData, actionMenu)" [text]="true" [rounded]="true" size="small"
-                        severity="secondary" styleClass="!text-slate-400 dark:!text-slate-500"></p-button>
+                        severity="secondary" class="!text-slate-400 dark:!text-slate-500"></p-button>
                 </div>
+                }
             </td>
+            }
         </tr>
     </ng-template>
 
@@ -75,4 +79,4 @@
     </ng-template>
 </p-table>
 
-<p-menu #actionMenu [model]="menuItems" [popup]="true" appendTo="body" styleClass="min-w-[120px] shadow-lg"></p-menu>
+<p-menu #actionMenu [model]="menuItems" [popup]="true" appendTo="body" class="min-w-[120px] shadow-lg"></p-menu>

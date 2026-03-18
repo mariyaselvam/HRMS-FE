@@ -64,7 +64,7 @@ export class CommonTableComponent {
             this.menuItems.push({
                 label: 'Delete',
                 icon: 'pi pi-trash',
-                styleClass: 'text-red-500', 
+                class: 'text-red-500', 
                 command: () => this.delete.emit(rowData)
             });
         }

@@ -222,7 +222,7 @@
                             <!-- Resume Upload -->
                             <div
                                 class="bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                                <ng-container *ngIf="!getFileForType('resume'); else resumePreview">
+                                @if (!getFileForType('resume')) {
                                     <div class="flex flex-col items-center justify-center gap-3">
                                         <div
                                             class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 flex items-center justify-center">
@@ -240,8 +240,7 @@
                                                 (change)="onFileSelect($event, 'resume')">
                                         </label>
                                     </div>
-                                </ng-container>
-                                <ng-template #resumePreview>
+                                } @else {
                                     <div class="flex flex-col items-center justify-center gap-4">
                                         <div
                                             class="w-16 h-16 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 flex items-center justify-center border border-indigo-100 dark:border-indigo-800/50">
@@ -262,13 +261,13 @@
                                             Remove Document
                                         </button>
                                     </div>
-                                </ng-template>
+                                }
                             </div>
 
                             <!-- ID Proof Upload -->
                             <div
                                 class="bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 text-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                                <ng-container *ngIf="!getFileForType('id_proof'); else idPreview">
+                                @if (!getFileForType('id_proof')) {
                                     <div class="flex flex-col items-center justify-center gap-3">
                                         <div
                                             class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center">
@@ -286,16 +285,17 @@
                                                 (change)="onFileSelect($event, 'id_proof')">
                                         </label>
                                     </div>
-                                </ng-container>
-                                <ng-template #idPreview>
+                                } @else {
                                     <div class="flex flex-col items-center justify-center gap-4">
                                         <div
                                             class="w-24 h-24 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center relative group">
-                                            <img *ngIf="getFileForType('id_proof')?.previewUrl"
-                                                [src]="getFileForType('id_proof')?.previewUrl"
+                                            @if (getFileForType('id_proof')?.previewUrl) {
+                                            <img [src]="getFileForType('id_proof')?.previewUrl"
                                                 class="w-full h-full object-cover">
-                                            <i *ngIf="!getFileForType('id_proof')?.previewUrl"
-                                                class="pi pi-file-pdf text-3xl text-slate-400"></i>
+                                            }
+                                            @if (!getFileForType('id_proof')?.previewUrl) {
+                                            <i class="pi pi-file-pdf text-3xl text-slate-400"></i>
+                                            }
                                             <div
                                                 class="absolute inset-0 bg-slate-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button class="text-white hover:text-rose-200 p-2"
@@ -319,7 +319,7 @@
                                             Remove Document
                                         </button>
                                     </div>
-                                </ng-template>
+                                }
                             </div>
                         </div>
 

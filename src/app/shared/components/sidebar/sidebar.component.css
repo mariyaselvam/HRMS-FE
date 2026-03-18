@@ -1,3 +1,12 @@
 :host {
     display: contents;
 }   
+
+.active-nav i {
+    color: rgb(67 56 202) !important; /* indigo-700 */
+}
+
+/* Maintain dark mode visibility for icons */
+:host-context(.dark) .active-nav i {
+    color: #818cf8 !important; /* indigo-400 */
+}

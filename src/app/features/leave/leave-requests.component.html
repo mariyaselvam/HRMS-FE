@@ -8,7 +8,7 @@
             (onClick)="openApplyDialog()"></app-button>
     </div>
 
-    <p-card styleClass="!shadow-sm !border-slate-300">
+    <p-card class="!shadow-sm !border-slate-300">
         <app-common-table [data]="store.myRequests()" [columns]="columns">
         </app-common-table>
     </p-card>
@@ -16,7 +16,7 @@
 
 <!-- Apply Leave Dialog -->
 <p-dialog header="Apply for Leave" [(visible)]="showDialog" [modal]="true" [draggable]="false" [resizable]="false"
-    [style]="{ width: '600px' }" styleClass="!rounded-2xl">
+    [style]="{ width: '600px' }" class="!rounded-2xl">
 
     <form [formGroup]="form" (ngSubmit)="onApply()" class="grid grid-cols-1 gap-5 pt-4">
         <app-common-select label="Leave Type" [options]="store.leaveTypes()" optionLabel="name" optionValue="id"
