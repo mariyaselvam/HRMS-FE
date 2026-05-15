@@ -1,4 +1,4 @@
-import { Component, inject, effect } from '@angular/core';
+import { Component, inject, effect, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -56,6 +56,7 @@ import { CommonButtonComponent } from '../../../shared/components/common-button.
 })
 export class NotificationSettingsComponent {
     protected store = inject(SettingsStore);
+    private cdr = inject(ChangeDetectorRef);
     settingsCategory = 'notifications';
 
     form = {
@@ -71,6 +72,7 @@ export class NotificationSettingsComponent {
             if (data && Object.keys(data).length > 0) {
                 setTimeout(() => {
                     this.form = { ...this.form, ...data };
+                    this.cdr.detectChanges();
                 });
             }
         });

@@ -49,8 +49,6 @@ export class SettingsComponent implements OnInit {
 
     menuItems = [
         { label: 'Company', icon: 'pi pi-building', path: 'company' },
-        { label: 'Attendance', icon: 'pi pi-clock', path: 'attendance' },
-        { label: 'Leave Policy', icon: 'pi pi-calendar', path: 'leave' },
         { label: 'Payroll', icon: 'pi pi-wallet', path: 'payroll' },
         { label: 'Notifications', icon: 'pi pi-bell', path: 'notifications' }
     ];
