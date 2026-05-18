@@ -33,6 +33,9 @@ export interface PayrollRecord {
     grossSalary: number;
     attendanceDeduction: number;
     leaveDeduction: number;
+    pfDeduction: number;
+    esiDeduction: number;
+    ptDeduction: number;
     netSalary: number;
     workingDays: number;
     presentDays: number;
@@ -43,6 +46,7 @@ export interface PayrollRecord {
         employeeCode: string;
         user: { email: string };
         department: { name: string };
+        personalDetails: { firstName: string; lastName: string };
     };
 }
 

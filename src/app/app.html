@@ -29,6 +29,20 @@
       </div>
 
       <div class="flex items-center gap-4">
+        <!-- Branch Context Switcher -->
+        @if (authService.hasRole('admin', 'super_admin')) {
+        <p-select 
+            [options]="locationStore.locations()" 
+            optionLabel="name" 
+            optionValue="id" 
+            [ngModel]="contextStore.activeBranchId()" 
+            (ngModelChange)="contextStore.setActiveBranch($event)"
+            placeholder="All Branches"
+            [showClear]="true"
+            styleClass="w-48 !h-9 !text-sm">
+        </p-select>
+        }
+
         <span class="text-sm font-medium text-slate-600 dark:text-slate-400 hidden sm:inline">
           {{ authService.user()?.email }}
         </span>

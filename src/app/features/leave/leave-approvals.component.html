@@ -7,7 +7,7 @@
     </div>
 
     <p-card class="!shadow-sm !border-slate-300">
-        <app-common-table [data]="store.allRequests()" [columns]="columns" [hasActions]="true"
+        <app-common-table [data]="tableData()" [columns]="columns" [hasActions]="true"
             (edit)="openReviewDialog($event)">
         </app-common-table>
     </p-card>
@@ -23,9 +23,9 @@
             <div class="flex justify-between items-start mb-3">
                 <div>
                     <h4 class="font-semibold text-slate-900">
-                        {{ selectedRequest.employee?.firstName }} {{ selectedRequest.employee?.lastName }}
+                        {{ getEmployeeLabel(selectedRequest.employee) }}
                     </h4>
-                    <p class="text-xs text-slate-500">{{ selectedRequest.employee?.email }}</p>
+                    <p class="text-xs text-slate-500">{{ selectedRequest.employee?.user?.email }}</p>
                 </div>
                 <span class="text-xs font-semibold px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">
                     {{ selectedRequest.leaveType?.name }}

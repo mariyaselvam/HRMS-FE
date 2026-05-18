@@ -1,13 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LeaveStore } from '../../store/leave.store';
 import { CommonTableComponent, Column } from '../../shared/components/common-table.component';
 import { CommonButtonComponent } from '../../shared/components/common-button.component';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonInputComponent } from '../../shared/components/common-input.component';
-import { LeaveRequest } from '../../core/models/leave.model';
+import { getLeaveRequestEmployeeLabel, LeaveRequest } from '../../core/models/leave.model';
 
 @Component({
     selector: 'app-leave-approvals',
@@ -31,8 +31,17 @@ export class LeaveApprovalsComponent implements OnInit {
     showDialog = false;
     submitted = false;
 
+    protected tableData = computed(() =>
+        this.store.allRequests().map((request) => ({
+            ...request,
+            employeeLabel: getLeaveRequestEmployeeLabel(request.employee),
+        }))
+    );
+
+    protected getEmployeeLabel = getLeaveRequestEmployeeLabel;
+
     columns: Column[] = [
-        { field: 'employee.firstName', header: 'Employee' },
+        { field: 'employeeLabel', header: 'Employee' },
         { field: 'leaveType.name', header: 'Type' },
         { field: 'startDate', header: 'From', type: 'date' },
         { field: 'endDate', header: 'To', type: 'date' },

@@ -24,13 +24,29 @@ export interface LeaveRequest {
     approverRemarks?: string;
     createdAt: string;
     updatedAt: string;
-    // Included relations
-    employee?: {
-        firstName: string;
-        lastName: string;
-        email: string;
-    };
+    // Included relations (matches backend employee include)
+    employee?: LeaveRequestEmployee;
     leaveType?: LeaveType;
+}
+
+export interface LeaveRequestEmployee {
+    id?: string;
+    employeeCode?: string;
+    user?: { email: string };
+    personalDetails?: {
+        firstName?: string;
+        lastName?: string;
+    };
+}
+
+/** Display label for leave request employee relation */
+export function getLeaveRequestEmployeeLabel(employee?: LeaveRequestEmployee): string {
+    if (!employee) return '—';
+    const first = employee.personalDetails?.firstName;
+    if (first) {
+        return `${first} ${employee.personalDetails?.lastName || ''}`.trim();
+    }
+    return employee.user?.email ?? employee.employeeCode ?? '—';
 }
 
 export interface LeaveBalance {

@@ -1,20 +1,26 @@
 import { inject } from '@angular/core';
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { ContextStore } from '../../store/context.store';
 import { catchError, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(AuthService);
+    const contextStore = inject(ContextStore);
+    
     const token = authService.getToken();
+    const activeBranchId = contextStore.activeBranchId();
 
-    let authReq = req;
+    let headers = req.headers;
     if (token) {
-        authReq = req.clone({
-            setHeaders: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        headers = headers.set('Authorization', `Bearer ${token}`);
     }
+    
+    if (activeBranchId) {
+        headers = headers.set('x-branch-id', activeBranchId);
+    }
+
+    const authReq = req.clone({ headers });
 
     return next(authReq).pipe(
         catchError((error: HttpErrorResponse) => {
@@ -25,3 +31,4 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         })
     );
 };
+

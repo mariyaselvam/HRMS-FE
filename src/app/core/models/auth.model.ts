@@ -3,6 +3,7 @@ export interface AuthUser {
     email: string;
     role: string;
     companyId: string;
+    workLocationId?: string;
 }
 
 export interface LoginRequest {
@@ -22,4 +23,5 @@ export interface JwtPayload {
     userId: string;
     companyId: string;
     role: string;
+    workLocationId?: string;
 }

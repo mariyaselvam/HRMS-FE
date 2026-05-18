@@ -19,6 +19,7 @@ import { LoginRequest } from '../../core/models/auth.model';
 export class LoginComponent {
     email = '';
     password = '';
+    showPassword = false;
     loading = false;
     errorMessage = '';
 

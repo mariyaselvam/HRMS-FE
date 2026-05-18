@@ -58,8 +58,13 @@
                     </div>
                     <div class="input-wrapper">
                         <i class="pi pi-lock input-icon"></i>
-                        <input id="password" type="password" pInputText [(ngModel)]="password" name="password"
-                            placeholder="Enter your password" class="login-input" autocomplete="current-password" />
+                        <input id="password" [type]="showPassword ? 'text' : 'password'" pInputText [(ngModel)]="password" name="password"
+                            placeholder="Enter your password" class="login-input pr-12" autocomplete="current-password" />
+                        <button type="button" 
+                            class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none z-20 cursor-pointer"
+                            (click)="showPassword = !showPassword">
+                            <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+                        </button>
                     </div>
                 </div>
 
