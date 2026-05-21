@@ -96,9 +96,14 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <p-card class="lg:col-span-2 !shadow-sm !border-slate-300 dark:!border-slate-800"
             header="Employee Attendance Overview">
-            <div
-                class="h-64 flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700">
-                <p class="text-slate-400 dark:text-slate-500">Chart Visualization Placeholder</p>
+            <div class="h-64">
+                @if (summary.attendance.overview?.length) {
+                    <p-chart type="bar" [data]="chartData()" [options]="chartOptions" height="250px"></p-chart>
+                } @else {
+                    <div class="h-full flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <p class="text-slate-400 dark:text-slate-500">No attendance data recorded for this week</p>
+                    </div>
+                }
             </div>
         </p-card>
 

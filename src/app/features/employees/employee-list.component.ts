@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, effect, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeStore } from '../../store/employee.store';
 import { CommonTableComponent, Column } from '../../shared/components/common-table.component';
@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { Employee } from '../../core/models/employee.model';
 import { NotificationService } from '../../core/services/notification.service';
 import { Router } from '@angular/router';
+import { ContextStore } from '../../store/context.store';
 
 @Component({
     selector: 'app-employee-list',
@@ -29,10 +30,18 @@ import { Router } from '@angular/router';
     ],
     templateUrl: './employee-list.component.html'
 })
-export class EmployeeListComponent implements OnInit {
+export class EmployeeListComponent {
     protected store = inject(EmployeeStore);
     private notify = inject(NotificationService);
     private router = inject(Router);
+    protected contextStore = inject(ContextStore);
+
+    constructor() {
+        effect(() => {
+            const branchId = this.contextStore.activeBranchId();
+            this.store.loadEmployees(branchId || undefined);
+        });
+    }
 
 
 
@@ -40,7 +49,6 @@ export class EmployeeListComponent implements OnInit {
         { field: 'employeeCode', header: 'Employee Code' },
         { field: 'email', header: 'Email' },
         { field: 'department', header: 'Department' },
-        { field: 'workLocation', header: 'Branch' },
         { field: 'team', header: 'Team' },
         { field: 'dateOfJoining', header: 'Joining Date', type: 'date' },
         { field: 'profileCompletion', header: 'Progress', type: 'progress' },
@@ -50,14 +58,12 @@ export class EmployeeListComponent implements OnInit {
     // Filters
     searchQuery = signal<string>('');
     selectedDepartment = signal<string | null>(null);
-    selectedLocation = signal<string | null>(null);
     selectedStatus = signal<string | null>(null);
 
     activeFilterCount = computed(() => {
         let count = 0;
         if (this.searchQuery()) count++;
         if (this.selectedDepartment()) count++;
-        if (this.selectedLocation()) count++;
         if (this.selectedStatus()) count++;
         return count;
     });
@@ -66,11 +72,6 @@ export class EmployeeListComponent implements OnInit {
     departments = computed(() => {
         const deps = this.store.employees().map(e => e.department).filter(d => !!d);
         return [...new Set(deps)].map(d => ({ label: d, value: d }));
-    });
-
-    locations = computed(() => {
-        const locs = this.store.employees().map(e => e.workLocation).filter(l => !!l);
-        return [...new Set(locs)].map(l => ({ label: l, value: l }));
     });
 
     statuses = computed(() => {
@@ -95,11 +96,6 @@ export class EmployeeListComponent implements OnInit {
             data = data.filter(e => e.department === dept);
         }
 
-        const loc = this.selectedLocation();
-        if (loc) {
-            data = data.filter(e => e.workLocation === loc);
-        }
-
         const status = this.selectedStatus();
         if (status) {
             data = data.filter(e => e.employmentStatus === status);
@@ -111,10 +107,7 @@ export class EmployeeListComponent implements OnInit {
     clearFilters() {
         this.searchQuery.set('');
         this.selectedDepartment.set(null);
-        this.selectedLocation.set(null);
         this.selectedStatus.set(null);
-    }    ngOnInit() {
-        this.store.loadEmployees();
     }
 
     openAddDialog(): void {

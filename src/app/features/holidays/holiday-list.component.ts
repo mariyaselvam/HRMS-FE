@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HolidayStore } from '../../store/holiday.store';
@@ -11,6 +11,7 @@ import { CommonInputComponent } from '../../shared/components/common-input.compo
 import { CommonDatepickerComponent } from '../../shared/components/common-datepicker.component';
 import { Holiday } from '../../core/models/holiday.model';
 import { NotificationService } from '../../core/services/notification.service';
+import { ContextStore } from '../../store/context.store';
 
 @Component({
     selector: 'app-holiday-list',
@@ -29,17 +30,20 @@ import { NotificationService } from '../../core/services/notification.service';
     ],
     templateUrl: './holiday-list.component.html'
 })
-export class HolidayListComponent implements OnInit {
+export class HolidayListComponent {
     protected store = inject(HolidayStore);
+    protected contextStore = inject(ContextStore);
     private fb = inject(FormBuilder);
     private notify = inject(NotificationService);
 
     showDialog = false;
     submitted = false;
+    isAllBranchesMode = false;
 
     columns: Column[] = [
         { field: 'date', header: 'Date', type: 'date' },
         { field: 'name', header: 'Holiday Name' },
+        { field: 'workLocation.name', header: 'Branch' },
         { field: 'isOptional', header: 'Type', type: 'boolean' }
     ];
 
@@ -49,14 +53,32 @@ export class HolidayListComponent implements OnInit {
         isOptional: [false]
     });
 
-    ngOnInit() {
-        this.store.loadHolidays();
+    constructor() {
+        effect(() => {
+            const branchId = this.contextStore.activeBranchId();
+            this.store.loadHolidays(branchId || undefined);
+        });
     }
 
     openAddDialog() {
-        this.form.reset({ isOptional: false });
-        this.submitted = false;
-        this.showDialog = true;
+        const activeBranch = this.contextStore.activeBranchId();
+        if (!activeBranch) {
+            this.notify.confirm(
+                'This will create this holiday for all branches. Are you sure?',
+                'Create Holiday for All Branches',
+                () => {
+                    this.isAllBranchesMode = true;
+                    this.form.reset({ isOptional: false });
+                    this.submitted = false;
+                    this.showDialog = true;
+                }
+            );
+        } else {
+            this.isAllBranchesMode = false;
+            this.form.reset({ isOptional: false });
+            this.submitted = false;
+            this.showDialog = true;
+        }
     }
 
     onDelete(holiday: Holiday) {
@@ -68,15 +90,33 @@ export class HolidayListComponent implements OnInit {
     onSubmit() {
         this.submitted = true;
         if (this.form.valid) {
-            this.store.addHoliday(this.form.value as any);
-            this.showDialog = false;
+            if (this.isAllBranchesMode) {
+                const val = {
+                    ...this.form.value,
+                    workLocationId: null,
+                    allBranches: true
+                };
+                this.store.addHoliday(val as any);
+                this.showDialog = false;
+            } else {
+                const activeBranch = this.contextStore.activeBranchId();
+                const val = {
+                    ...this.form.value,
+                    workLocationId: activeBranch
+                };
+                this.store.addHoliday(val as any);
+                this.showDialog = false;
+            }
         }
     }
 
     getErrorMessage(controlName: string): string | null {
         if (!this.submitted) return null;
         const control = this.form.get(controlName);
-        if (control?.errors?.['required']) return 'This field is required';
+        if (control?.errors?.['required']) {
+            if (controlName === 'name') return 'Holiday name is required';
+            if (controlName === 'date') return 'Date is required';
+        }
         return null;
     }
 }

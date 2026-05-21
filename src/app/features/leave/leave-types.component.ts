@@ -8,6 +8,8 @@ import { DialogModule } from 'primeng/dialog';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonInputComponent } from '../../shared/components/common-input.component';
 import { CommonSelectComponent } from '../../shared/components/common-select.component';
+import { NotificationService } from '../../core/services/notification.service';
+import { ContextStore } from '../../store/context.store';
 
 @Component({
     selector: 'app-leave-types',
@@ -26,10 +28,13 @@ import { CommonSelectComponent } from '../../shared/components/common-select.com
 })
 export class LeaveTypesComponent implements OnInit {
     protected store = inject(LeaveStore);
+    protected contextStore = inject(ContextStore);
     private fb = inject(FormBuilder);
+    private notify = inject(NotificationService);
 
     showDialog = false;
     submitted = false;
+    isAllBranchesMode = false;
 
     columns: Column[] = [
         { field: 'name', header: 'Leave Type' },
@@ -54,9 +59,24 @@ export class LeaveTypesComponent implements OnInit {
     }
 
     openAddDialog() {
-        this.form.reset({ isPaid: true, daysAllowed: 10 });
-        this.submitted = false;
-        this.showDialog = true;
+        const activeBranch = this.contextStore.activeBranchId();
+        if (!activeBranch) {
+            this.notify.confirm(
+                'This will create this leave type for all branches. Are you sure?',
+                'Create Leave Type for All Branches',
+                () => {
+                    this.isAllBranchesMode = true;
+                    this.form.reset({ isPaid: true, daysAllowed: 10 });
+                    this.submitted = false;
+                    this.showDialog = true;
+                }
+            );
+        } else {
+            this.isAllBranchesMode = false;
+            this.form.reset({ isPaid: true, daysAllowed: 10 });
+            this.submitted = false;
+            this.showDialog = true;
+        }
     }
 
     onSave() {

@@ -26,12 +26,13 @@ export class DepartmentStore {
     readonly error = computed(() => this.state().error);
 
     // Actions
-    loadDepartments(force: boolean = false) {
-        if (!force && this.state().departments.length > 0) {
-            return;
-        }
+    loadDepartments(locationId?: string | boolean) {
         this.setLoading(true);
-        this.http.get<ApiResponse<Department[]>>(API_ENDPOINTS.DEPARTMENTS)
+        const locId = typeof locationId === 'string' ? locationId : undefined;
+        const url = locId 
+            ? `${API_ENDPOINTS.DEPARTMENTS}?locationId=${locId}` 
+            : API_ENDPOINTS.DEPARTMENTS;
+        this.http.get<ApiResponse<Department[]>>(url)
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => this.state.update(s => ({ ...s, departments: res.data })),

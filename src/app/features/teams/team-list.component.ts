@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, computed } from '@angular/core';
+import { Component, inject, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TeamStore } from '../../store/team.store';
@@ -11,6 +11,7 @@ import { CommonInputComponent } from '../../shared/components/common-input.compo
 import { CommonSelectComponent } from '../../shared/components/common-select.component';
 import { Team } from '../../core/models/team.model';
 import { NotificationService } from '../../core/services/notification.service';
+import { ContextStore } from '../../store/context.store';
 
 @Component({
     selector: 'app-team-list',
@@ -28,9 +29,10 @@ import { NotificationService } from '../../core/services/notification.service';
     ],
     templateUrl: './team-list.component.html'
 })
-export class TeamListComponent implements OnInit {
+export class TeamListComponent {
     protected store = inject(TeamStore);
     protected deptStore = inject(DepartmentStore);
+    protected contextStore = inject(ContextStore);
     private fb = inject(FormBuilder);
     private notify = inject(NotificationService);
 
@@ -42,6 +44,7 @@ export class TeamListComponent implements OnInit {
     columns: Column[] = [
         { field: 'name', header: 'Team Name' },
         { field: 'department.name', header: 'Department' },
+        { field: 'workLocation.name', header: 'Branch' },
         { field: '_count.employees', header: 'Members' },
         { field: 'createdAt', header: 'Created At', type: 'date' }
     ];
@@ -55,12 +58,20 @@ export class TeamListComponent implements OnInit {
         this.deptStore.departments().map(d => ({ label: d.name, value: d.id }))
     );
 
-    ngOnInit() {
-        this.store.loadTeams();
-        this.deptStore.loadDepartments();
+    constructor() {
+        effect(() => {
+            const branchId = this.contextStore.activeBranchId();
+            this.store.loadTeams(branchId || undefined);
+            this.deptStore.loadDepartments(branchId || undefined);
+        });
     }
 
     openAddDialog() {
+        const activeBranch = this.contextStore.activeBranchId();
+        if (!activeBranch) {
+            this.notify.warn('Select a Branch', 'Please select a specific branch from the header dropdown to create a team.');
+            return;
+        }
         this.isEdit = false;
         this.selectedTeamId = null;
         this.form.reset();
@@ -88,7 +99,16 @@ export class TeamListComponent implements OnInit {
     onSubmit() {
         this.submitted = true;
         if (this.form.valid) {
-            const val = this.form.value as any;
+            const activeBranch = this.contextStore.activeBranchId();
+            if (!activeBranch) {
+                this.notify.error('Specific Branch Required', 'Please select a specific branch from the header dropdown.');
+                return;
+            }
+            const val = {
+                name: this.form.value.name as string,
+                departmentId: this.form.value.departmentId as string,
+                workLocationId: activeBranch
+            };
             if (this.isEdit && this.selectedTeamId) {
                 this.store.updateTeam(this.selectedTeamId, val);
             } else {
@@ -101,7 +121,10 @@ export class TeamListComponent implements OnInit {
     getErrorMessage(controlName: string): string | null {
         if (!this.submitted) return null;
         const control = this.form.get(controlName);
-        if (control?.errors?.['required']) return 'This field is required';
+        if (control?.errors?.['required']) {
+            if (controlName === 'name') return 'Team name is required';
+            if (controlName === 'departmentId') return 'Department is required';
+        }
         return null;
     }
 }

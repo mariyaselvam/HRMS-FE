@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LeaveStore } from '../../store/leave.store';
 import { CommonTableComponent, Column } from '../../shared/components/common-table.component';
@@ -8,6 +8,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonInputComponent } from '../../shared/components/common-input.component';
 import { getLeaveRequestEmployeeLabel, LeaveRequest } from '../../core/models/leave.model';
+import { ContextStore } from '../../store/context.store';
 
 @Component({
     selector: 'app-leave-approvals',
@@ -23,8 +24,9 @@ import { getLeaveRequestEmployeeLabel, LeaveRequest } from '../../core/models/le
     ],
     templateUrl: './leave-approvals.component.html'
 })
-export class LeaveApprovalsComponent implements OnInit {
+export class LeaveApprovalsComponent {
     protected store = inject(LeaveStore);
+    protected contextStore = inject(ContextStore);
     private fb = inject(FormBuilder);
 
     selectedRequest: LeaveRequest | null = null;
@@ -53,8 +55,11 @@ export class LeaveApprovalsComponent implements OnInit {
         remarks: ['']
     });
 
-    ngOnInit() {
-        this.store.loadAllRequests();
+    constructor() {
+        effect(() => {
+            const branchId = this.contextStore.activeBranchId();
+            this.store.loadAllRequests(branchId || undefined);
+        });
     }
 
     openReviewDialog(request: LeaveRequest) {

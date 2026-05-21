@@ -3,9 +3,13 @@ export interface Team {
     name: string;
     companyId: string;
     departmentId: string;
+    workLocationId?: string | null;
     department?: {
         name: string;
     };
+    workLocation?: {
+        name: string;
+    } | null;
     createdAt: string;
     updatedAt: string;
     _count?: {
@@ -16,6 +20,7 @@ export interface Team {
 export interface CreateTeamInput {
     name: string;
     departmentId: string;
+    workLocationId?: string | null;
 }
 
 export interface TeamState {

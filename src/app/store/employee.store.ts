@@ -46,12 +46,13 @@ export class EmployeeStore {
     readonly departments = computed(() => this._departments());
 
     // Actions
-    loadEmployees(force: boolean = false) {
-        if (!force && this.state().employees.length > 0) {
-            return;
-        }
+    loadEmployees(locationId?: string | boolean) {
         this.setLoading(true);
-        this.http.get<ApiResponse<EmployeeApiResponse[]>>(API_ENDPOINTS.EMPLOYEES)
+        const locId = typeof locationId === 'string' ? locationId : undefined;
+        const url = locId 
+            ? `${API_ENDPOINTS.EMPLOYEES}?locationId=${locId}` 
+            : API_ENDPOINTS.EMPLOYEES;
+        this.http.get<ApiResponse<EmployeeApiResponse[]>>(url)
             .pipe(
                 map(res => res.data.map(mapEmployeeResponse)),
                 finalize(() => this.setLoading(false))

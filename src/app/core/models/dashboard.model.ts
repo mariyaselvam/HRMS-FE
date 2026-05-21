@@ -5,6 +5,7 @@ export interface EmployeeStats {
 
 export interface AttendanceStats {
     presentToday: number;
+    overview?: { date: string; present: number; absent: number; late: number }[];
 }
 
 export interface ApprovalsPending {

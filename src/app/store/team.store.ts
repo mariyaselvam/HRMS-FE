@@ -26,12 +26,13 @@ export class TeamStore {
     readonly error = computed(() => this.state().error);
 
     // Actions
-    loadTeams(force: boolean = false) {
-        if (!force && this.state().teams.length > 0) {
-            return;
-        }
+    loadTeams(locationId?: string | boolean) {
         this.setLoading(true);
-        this.http.get<ApiResponse<Team[]>>(API_ENDPOINTS.TEAMS)
+        const locId = typeof locationId === 'string' ? locationId : undefined;
+        const url = locId 
+            ? `${API_ENDPOINTS.TEAMS}?locationId=${locId}` 
+            : API_ENDPOINTS.TEAMS;
+        this.http.get<ApiResponse<Team[]>>(url)
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => this.state.update(s => ({ ...s, teams: res.data })),

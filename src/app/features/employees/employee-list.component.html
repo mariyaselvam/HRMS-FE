@@ -70,10 +70,7 @@
                     (ngModelChange)="selectedDepartment.set($event)" placeholder="All Departments" appendTo="body">
                 </app-common-select>
 
-                <!-- Location Filter -->
-                <app-common-select label="Branch" [options]="locations()" [(ngModel)]="selectedLocation"
-                    (ngModelChange)="selectedLocation.set($event)" placeholder="All Branches" appendTo="body">
-                </app-common-select>
+
                 
                 <!-- Status Filter -->
                 <app-common-select label="Status" [options]="statuses()" [(ngModel)]="selectedStatus"

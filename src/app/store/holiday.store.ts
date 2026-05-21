@@ -5,6 +5,7 @@ import { API_ENDPOINTS } from '../core/constants/app.constants';
 import { ApiResponse } from '../core/models/employee.model';
 import { NotificationService } from '../core/services/notification.service';
 import { finalize } from 'rxjs';
+import { ContextStore } from './context.store';
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +13,7 @@ import { finalize } from 'rxjs';
 export class HolidayStore {
     private http = inject(BaseHttpService);
     private notify = inject(NotificationService);
+    private contextStore = inject(ContextStore);
 
     // State
     private state = signal<HolidayState>({
@@ -26,9 +28,11 @@ export class HolidayStore {
     readonly error = computed(() => this.state().error);
 
     // Actions
-    loadHolidays(year?: number) {
+    loadHolidays(branchId?: string, year?: number) {
         this.setLoading(true);
-        const params = year ? { year } : {};
+        const params: any = {};
+        if (year) params.year = year;
+        if (branchId) params.locationId = branchId;
         this.http.get<ApiResponse<Holiday[]>>(API_ENDPOINTS.HOLIDAYS, params)
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
@@ -39,12 +43,13 @@ export class HolidayStore {
 
     addHoliday(data: CreateHolidayInput) {
         this.setLoading(true);
-        this.http.post<ApiResponse<Holiday>>(API_ENDPOINTS.HOLIDAYS, data)
+        this.http.post<ApiResponse<any>>(API_ENDPOINTS.HOLIDAYS, data)
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
-                next: (res) => {
-                    this.state.update(s => ({ ...s, holidays: [...s.holidays, res.data] }));
-                    this.notify.success('Holiday Added', `Successfully added ${res.data.name}`);
+                next: () => {
+                    const branchId = this.contextStore.activeBranchId();
+                    this.loadHolidays(branchId || undefined);
+                    this.notify.success('Holiday Added', 'Successfully saved holiday');
                 },
                 error: (err) => this.handleError('Failed to add holiday', err)
             });

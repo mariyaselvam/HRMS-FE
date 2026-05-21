@@ -26,9 +26,12 @@ export class DashboardStore {
     readonly error = computed(() => this.state().error);
 
     // Actions
-    loadSummary() {
+    loadSummary(locationId?: string) {
         this.setLoading(true);
-        this.http.get<ApiResponse<DashboardSummary>>(`${API_ENDPOINTS.DASHBOARD}/summary`)
+        const url = locationId 
+            ? `${API_ENDPOINTS.DASHBOARD}/summary?locationId=${locationId}` 
+            : `${API_ENDPOINTS.DASHBOARD}/summary`;
+        this.http.get<ApiResponse<DashboardSummary>>(url)
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => this.state.update(s => ({ ...s, summary: res.data })),

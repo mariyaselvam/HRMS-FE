@@ -88,9 +88,10 @@ export class LeaveStore {
     }
 
     // Actions - Leave Management (Admin/Manager)
-    loadAllRequests() {
+    loadAllRequests(branchId?: string) {
         this.setLoading(true);
-        this.http.get<ApiResponse<LeaveRequest[]>>(`${API_ENDPOINTS.LEAVE}/all-requests`)
+        const params = branchId ? { locationId: branchId } : {};
+        this.http.get<ApiResponse<LeaveRequest[]>>(`${API_ENDPOINTS.LEAVE}/all-requests`, params)
             .pipe(finalize(() => this.setLoading(false)))
             .subscribe({
                 next: (res) => this.state.update(s => ({ ...s, allRequests: res.data })),

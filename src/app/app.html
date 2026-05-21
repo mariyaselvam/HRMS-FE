@@ -43,22 +43,12 @@
         </p-select>
         }
 
-        <span class="text-sm font-medium text-slate-600 dark:text-slate-400 hidden sm:inline">
-          {{ authService.user()?.email }}
-        </span>
-        <span
-          class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1.5 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-400 hidden sm:inline">
-          {{ authService.userRole() }}
-        </span>
-
         <p-button [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'" [text]="true" [rounded]="true"
           class="!text-slate-600 dark:!text-slate-400" (onClick)="themeService.toggleTheme()">
         </p-button>
 
         <p-button icon="pi pi-bell" [text]="true" [rounded]="true"
           class="!text-slate-600 dark:!text-slate-400"></p-button>
-        <p-button label="Logout" icon="pi pi-power-off" severity="secondary" variant="outlined" size="small"
-          (onClick)="onLogout()"></p-button>
       </div>
     </header>
 

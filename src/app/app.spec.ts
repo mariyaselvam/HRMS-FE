@@ -7,6 +7,8 @@ import { provideRouter } from '@angular/router';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { vi } from 'vitest';
 
+import { LocationStore } from './store/location.store';
+
 describe('App', () => {
   beforeEach(async () => {
     const themeServiceMock = {
@@ -17,7 +19,12 @@ describe('App', () => {
       isLoggedIn: signal(true),
       logout: vi.fn(),
       user: signal({ email: 'test@example.com' }),
-      userRole: signal('ADMIN')
+      userRole: signal('ADMIN'),
+      hasRole: vi.fn().mockReturnValue(true)
+    };
+    const locationStoreMock = {
+      locations: signal([]),
+      loadLocations: vi.fn()
     };
 
     await TestBed.configureTestingModule({
@@ -26,6 +33,7 @@ describe('App', () => {
         provideRouter([]),
         { provide: ThemeService, useValue: themeServiceMock },
         { provide: AuthService, useValue: authServiceMock },
+        { provide: LocationStore, useValue: locationStoreMock },
         MessageService,
         ConfirmationService
       ]
