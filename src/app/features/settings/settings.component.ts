@@ -18,26 +18,24 @@ import { SettingsStore } from '../../store/settings.store';
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                <!-- Sidebar Navigation -->
-                <div class="md:col-span-3">
-                    <p-card class="!shadow-sm !border-slate-300 dark:!border-slate-800 !overflow-hidden">
-                        <nav class="flex flex-col -m-4">
-                            @for (item of menuItems; track item.path) {
-                                <a [routerLink]="item.path"
-                                   routerLinkActive="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 border-l-4 border-indigo-600 font-semibold"
-                                   [routerLinkActiveOptions]="{exact: false}"
-                                   class="flex items-center gap-3 px-6 py-4 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-100 transition-all border-l-4 border-transparent text-sm font-medium">
-                                    <i [class]="item.icon + ' text-lg opacity-70'"></i>
-                                    {{ item.label }}
-                                </a>
-                            }
-                        </nav>
-                    </p-card>
+            <div class="flex flex-col gap-6">
+                <!-- Top Navigation -->
+                <div class="border-b border-slate-200 dark:border-slate-800">
+                    <nav class="flex overflow-x-auto">
+                        @for (item of menuItems; track item.path) {
+                            <a [routerLink]="item.path"
+                               routerLinkActive="text-indigo-600 dark:text-indigo-400 border-indigo-600 dark:border-indigo-400 font-semibold"
+                               [routerLinkActiveOptions]="{exact: false}"
+                               class="flex items-center gap-2 px-6 py-4 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors border-b-2 border-transparent text-sm font-medium whitespace-nowrap">
+                                <i [class]="item.icon + ' text-lg opacity-70'"></i>
+                                {{ item.label }}
+                            </a>
+                        }
+                    </nav>
                 </div>
 
                 <!-- Main Content Area -->
-                <div class="md:col-span-9">
+                <div class="px-2">
                     <router-outlet></router-outlet>
                 </div>
             </div>
